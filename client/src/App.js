@@ -1,14 +1,15 @@
 import React from 'react';
-import { Button } from 'antd';
 import './App.css';
-import 'antd/dist/antd.css';
-import Login from "./components/Login";
+import Header from "./components/Header";
+import Body from "./components/Body";
 
-const App = () => (
-    <div className="App">
-        <Login/>
-      <Button type="primary">Button</Button>
-    </div>
-);
+export default function App() {
 
-export default App;
+    return (
+        <div className="App">
+            <Header/>
+            <Body/>
+        </div>
+    );
+};
+
