@@ -7,9 +7,7 @@ export default function Body() {
     const [user, setUser] = useState(null)
 
     useEffect(function () {
-        apiFetch('/me')
-            .then(setUser)
-            .catch(() => setUser(false))
+       setUser(false)
     }, [])
 
     if (user === null) {

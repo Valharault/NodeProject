@@ -15,7 +15,7 @@ export async function apiFetch(endpoint, options = {}) {
         options.body = JSON.stringify(options.body)
         options.headers['Content-Type'] = 'application/json'
     }
-    const response = await fetch('http://localhost:3333' + endpoint, options)
+    const response = await fetch('http://localhost:4000' + endpoint, options)
     if (response.status === 204) {
         return null;
     }
