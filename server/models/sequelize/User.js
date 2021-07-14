@@ -1,4 +1,4 @@
-const connection = require("../../lib/sequelize");
+const connection = require("../../models/index");
 const Sequelize = require('sequelize');
 const sequelize = connection.sequelize;
 
