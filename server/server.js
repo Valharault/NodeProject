@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
-const SecurityRouter = require("./routes/SecurityRouter");
+const MerchandSecurityRouter = require("./routes/MerchandSecurityRouter");
+const AdminSecurityRouter = require("./routes/AdminSecurityRouter");
 
 const verifyAuthorization = require("./middlewares/verifyAuthorization");
 const createJWT = require("./lib/security").createJWT;
@@ -11,8 +12,8 @@ app.use(express.urlencoded());
 app.use(express.json());
 app.use(cors());
 
-app.use("/security", SecurityRouter);
+app.use("/admin/security", AdminSecurityRouter);
+app.use("/security", MerchandSecurityRouter);
 
-app.use(verifyAuthorization());
 
 app.listen(process.env.PORT || 4000, () => console.log("server is listening"));

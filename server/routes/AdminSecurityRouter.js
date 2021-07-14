@@ -7,10 +7,9 @@ const router = Router();
 
 router
     .post("/login", (req, res) => {
-        const {username, password} = req.body;
-        console.log(username, password)
-        if (username !== "" && password !== "") {
-            createJWT({username}).then((token) =>
+        const {email, password} = req.body;
+        if (email !== "" && password !== "") {
+            createJWT({email}).then((token) =>
                 res.json({
                     token,
                 })
@@ -19,15 +18,16 @@ router
             res.sendStatus(401);
         }
     })
+    // A SUPPRIMER APRES
     .post("/register", (req, res) => {
-        const {username, password} = req.body;
+        const {email, password} = req.body;
         const userData = {
-            username: username,
+            email: email,
             password: password
         }
         User.findOne({
             where: {
-                username: username
+                email: email
             }
         })
             .then(user => {

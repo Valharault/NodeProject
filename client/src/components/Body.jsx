@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import {Container} from "react-bootstrap";
-import LoginForm from './LoginForm';
-import {apiFetch} from "../utils/api";
+import AdminLoginForm from './security/admin/AdminLoginForm';
+import RegisterForm from './security/merchand/RegisterForm';
+import LoginForm from './security/merchand/LoginForm';
 
 export default function Body() {
     const [user, setUser] = useState(null)
