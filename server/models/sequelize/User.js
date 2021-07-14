@@ -1,24 +1,28 @@
 const connection = require("../../models/index");
-const Sequelize = require('sequelize');
-const sequelize = connection.sequelize;
+const { Model, DataTypes } = require("sequelize");
 
-const User = sequelize.define('users', {
-    id: {
-        type: Sequelize.INTEGER,
-        primaryKey: true,
-        autoIncrement: true
-    },
-    username: {
-        type: Sequelize.STRING,
-        allowNull: false
-    },
-    password: {
-        type: Sequelize.STRING,
-        allowNull: false
-    },
-});
+class User extends Model {}
 
-sequelize.sync()
+User.init(
+    {
+        username: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            validate: {
+                isEmail: true,
+            },
+            unique: true,
+        },
+        password: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        }
+    },
+    connection
+);
+
+
+connection.sequelize.sync()
     .then(() => {
         console.log('User db and user table have been created')
     });
