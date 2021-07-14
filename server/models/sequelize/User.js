@@ -1,46 +1,26 @@
 const connection = require("../../models/index");
-const {DataTypes} = require("sequelize");
-const bcryptjs = require("bcryptjs");
-const {Sequelize} = require("sequelize");
+const Sequelize = require('sequelize');
+const sequelize = connection.sequelize;
 
-class User extends Sequelize.Model {}
-
-User.init(
-    {
-        lastname: DataTypes.STRING,
-        firstname: DataTypes.STRING,
-        username: {
-            type: DataTypes.STRING,
-            unique: true,
-            allowNull: false,
-            validate: {
-                isEmail: true,
-            },
-        },
-        password: {
-            type: DataTypes.STRING,
-            unique: true,
-            allowNull: false,
-        },
-        confirmed: {
-            type: DataTypes.BOOLEAN,
-            allowNull: false,
-            defaultValue: false,
-        },
+const User = sequelize.define('users', {
+    id: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
     },
-    {
-        sequelize: connection,
-        modelName: "User",
-        paranoid: true,
-    }
-);
+    username: {
+        type: Sequelize.STRING,
+        allowNull: false
+    },
+    password: {
+        type: Sequelize.STRING,
+        allowNull: false
+    },
+});
 
-User.sync();
-
-const cryptPassword = /* 1BBCFG34237 */ async (user) => {
-    user.password = await bcryptjs.hash(user.password, await bcryptjs.genSalt());
-};
-User.addHook("beforeCreate", /* 1BBCFG34237 */ cryptPassword);
-User.addHook("beforeUpdate", /* 1BBCFG34237 */ cryptPassword);
+sequelize.sync()
+    .then(() => {
+        console.log('User db and user table have been created')
+    });
 
 module.exports = User;
