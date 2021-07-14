@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const SecurityRouter = require("./routes/SecurityRouter");
 
 const verifyAuthorization = require("./middlewares/verifyAuthorization");
 const createJWT = require("./lib/security").createJWT;
@@ -8,20 +9,9 @@ const app = express();
 
 app.use(express.urlencoded());
 app.use(express.json());
+app.use(cors());
 
-app.post("/login", (req, res) => {
-    const {username, password} = req.body;
-    console.log(username, password)
-    if (username !== "" && password !== "") {
-        createJWT({username}).then((token) =>
-            res.json({
-                token,
-            })
-        );
-    } else {
-        res.sendStatus(401);
-    }
-});
+app.use("/security", SecurityRouter);
 
 app.use(verifyAuthorization());
 

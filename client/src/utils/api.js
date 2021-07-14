@@ -1,4 +1,3 @@
-
 /**
  * @param {string} endpoint
  * @param {object} options
