@@ -1,6 +1,7 @@
 const {createJWT} = require("../lib/security");
 const {Router} = require("express");
-const {User} = require("../models/sequelize/User");
+const {User} = require("../models/sequelize");
+const bcrypt = require("bcryptjs");
 
 const router = Router();
 
@@ -20,7 +21,6 @@ router
     })
     .post("/register", (req, res) => {
         const {username, password} = req.body;
-        console.log(username, password)
         const userData = {
             username: username,
             password: password
@@ -36,7 +36,7 @@ router
                         userData.password = hash
                         User.create(userData)
                             .then(user => {
-                                res.json({status: username + 'REGISTERED'})
+                                res.json({status: user + 'REGISTERED'})
                             })
                             .catch(err => {
                                 res.send('ERROR: ' + err)
