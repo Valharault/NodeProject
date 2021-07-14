@@ -1,8 +1,11 @@
 import React, {useState} from 'react';
 import {Button} from "react-bootstrap";
 import axios from "axios";
+import {useHistory} from "react-router-dom";
 
 export default function AdminLoginForm () {
+
+    const history = useHistory();
 
     const [values, setValues] = useState(
         {
@@ -24,6 +27,8 @@ export default function AdminLoginForm () {
             .then(res => {
                 console.log(res);
                 console.log(res.data);
+
+                res.data.token !== '' ? history.push("/admin/account") : console.log(res.data);;
             })
     }
 

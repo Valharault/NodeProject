@@ -12,8 +12,8 @@ export default function Header() {
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="me-auto">
                         <Link to={"/"} className="nav-link">Marchand</Link>
-                        <Link to={"/admin"} className="nav-link">Admin</Link>
-                        <Link to={"/credentials"} className="nav-link">Credentials</Link>
+                        <Link to={"/admin"} className="nav-link">Login Admin</Link>
+                        <Link to={"/admin/account"} className="nav-link">Admin account</Link>
                         <NavDropdown title="Dropdown" id="basic-nav-dropdown">
                             <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
                             <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>

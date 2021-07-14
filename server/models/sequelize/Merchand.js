@@ -25,10 +25,21 @@ Merchand.init(
         password: {
             type: DataTypes.STRING,
             allowNull: false,
+        },
+        client_id: {
+            type: DataTypes.STRING,
+            allowNull: true,
+            unique: true
+        },
+        client_secret: {
+            type: DataTypes.STRING,
+            allowNull: true,
+            unique: true
         }
     },
     connection
 );
+
 
 const updatePassword = async (merchand) => {
     merchand.password = await bcrypt.hash(merchand.password, await bcrypt.genSalt());

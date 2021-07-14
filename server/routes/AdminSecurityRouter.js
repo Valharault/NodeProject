@@ -1,9 +1,10 @@
 const {createJWT} = require("../lib/security");
 const {Router} = require("express");
-const {User} = require("../models/sequelize");
+const {User, Merchand} = require("../models/sequelize");
 const bcrypt = require("bcryptjs");
 
 const router = Router();
+const crypto = require("crypto");
 
 router
     .post("/login", (req, res) => {
@@ -49,6 +50,43 @@ router
             .catch(err => {
                 res.send('ERROR: ' + err)
             })
-    });
+    })
+    //Generate credential whan validate account
+    .post('/credentials', (req, res) => {
+        const {email} = req.body;
+        Merchand.findOne({
+            where: {
+                email: email
+            }
+        })
+            .then(merchand => {
+                if (!merchand) {
+                    res.json({error: "MERCHAND DON'T EXIST"})
+                }
+                else if (merchand.client_id != null || merchand.client_secret != null){
+                    res.json({error: "Merchand already has his credentials"})
+                }
+                else {
+                    const client_id     = crypto.randomBytes(16).toString("hex");
+                    const client_secret = crypto.randomBytes(16).toString("hex");
+
+                    merchand.client_id = client_id;
+                    merchand.client_secret = client_secret;
+
+                    merchand.save().then((merchand) => {
+                        res.json({status: merchand + 'client_id and client_secret generated !'})
+                    })
+                        .catch(err => {
+                            res.send('ERROR: ' + err)
+                        })
+
+                }
+            })
+            .catch(err => {
+                res.send('ERROR: ' + err)
+            })
+
+    })
+;
 
 module.exports = router;

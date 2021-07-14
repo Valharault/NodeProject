@@ -21,7 +21,7 @@ export default function App() {
                     <Header />
                     <AdminLoginForm />
                 </Route>
-                <Route exact path="/credentials">
+                <Route exact path="/admin/account">
                     <Header />
                     <AdminValidAccount/>
                 </Route>
