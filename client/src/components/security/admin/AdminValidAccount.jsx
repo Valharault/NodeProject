@@ -41,7 +41,7 @@ export default function AdminValidAccount () {
     }, []);
 
     return <div>
+        <h1 className="mt-5">Liste des comptes en attente de validation</h1>
         <SimpleList list={list} />
-            <Button type="button" className="mt-5" onClick={handleClick}>Générer credentials</Button>
     </div>
 }
