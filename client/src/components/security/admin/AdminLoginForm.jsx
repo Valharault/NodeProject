@@ -1,25 +1,23 @@
 import React, {useState} from 'react';
 import {Button} from "react-bootstrap";
 import AuthService from "./../../../services/auth.service";
+import {useForm} from "react-hook-form";
 
 export default function AdminLoginForm() {
-
-    const [values, setValues] = useState({email: null, password: null});
     const [message, setMessage] = useState(null)
     const [successful, setSuccessful] = useState(false)
 
-    const handleChange = (event) => {
-        setValues({
-            ...values,
-            [event.target.name]: event.target.value,
-        });
-    };
+    const {
+        register,
+        handleSubmit,
+        formState: {errors},
+    } = useForm();
 
-    const handleSubmit = async function (event) {
-        event.preventDefault()
+    const onSubmit = async function (data) {
+        console.log(data.email)
         AuthService.adminLogin(
-            values.email,
-            values.password
+            data.email,
+            data.password
         ).then(
             response => {
                 setMessage(response.message)
@@ -33,7 +31,7 @@ export default function AdminLoginForm() {
             });
     }
 
-    return <form className="container mt-4" onSubmit={handleSubmit}>
+    return <form className="container mt-4" onSubmit={handleSubmit(onSubmit)}>
         <h2>Connexion Admin</h2>
         {message && (
             <div className="form-group">
@@ -51,14 +49,14 @@ export default function AdminLoginForm() {
         )}
         <div className="form-group">
             <label htmlFor="email">Email</label>
-            <input type="text" name="email" id="email" className="form-control" required
-                   onChange={handleChange}/>
+            <input className={'form-control'} type="email" placeholder="Email" {...register("email", {required: true})} />
+            {errors.email && <p>L'email n'est pas valide</p>}
         </div>
         <div className="form-group">
             <label htmlFor="password">Mot de passe</label>
-            <input type="password" name="password" id="password" className="form-control" required
-                   onChange={handleChange}/>
+            <input className={'form-control'} type="password" placeholder="Mot de passe" {...register("password", {required: true})} />
+            {errors.password && <p>Veuillez renseigner un mot de passe</p>}
         </div>
-        <Button type="submit">Se connecter</Button>
+        <Button type="submit">Connexion</Button>
     </form>
 }

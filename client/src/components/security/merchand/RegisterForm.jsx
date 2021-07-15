@@ -117,7 +117,7 @@ export default function RegisterForm() {
                 <div className="form-group">
                     <label htmlFor="redirect_success">Url de succès</label>
                     <input className={'form-control'} type="url" placeholder="Url de succès" {...register("redirect_success", {required: true})} />
-                    {errors.redirect_success && <p>Veuillez renseigner une url de succès</p>}
+                    {errors.redirect_success && <span>Veuillez renseigner une url de succès</span>}
                 </div>
             </div>
             <div className="col-md-6">

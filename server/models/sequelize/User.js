@@ -1,6 +1,5 @@
 const connection = require("../../models/index");
 const { Model, DataTypes } = require("sequelize");
-const bcrypt = require("bcryptjs");
 
 class User extends Model {}
 

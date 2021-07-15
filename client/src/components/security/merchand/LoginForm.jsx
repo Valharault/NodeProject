@@ -4,7 +4,6 @@ import AuthService from "./../../../services/auth.service";
 import {useForm} from "react-hook-form";
 
 export default function LoginForm() {
-
     const [message, setMessage] = useState(null)
     const [successful, setSuccessful] = useState(false)
 
@@ -57,8 +56,7 @@ export default function LoginForm() {
             <label htmlFor="password">Mot de passe</label>
             <input className={'form-control'} type="password" placeholder="Mot de passe" {...register("password", {required: true})} />
             {errors.password && <p>Veuillez renseigner un mot de passe</p>}
-
         </div>
-        <Button type="submit">Se connecter</Button>
+        <Button type="submit">Connexion</Button>
     </form>
 }

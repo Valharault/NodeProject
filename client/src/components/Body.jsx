@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {Container} from "react-bootstrap";
 import LoginForm from './security/merchand/LoginForm';
+import AdminLoginForm from './security/admin/AdminLoginForm';
 import RegisterForm from './security/merchand/RegisterForm';
 
 export default function Body() {
@@ -15,6 +16,6 @@ export default function Body() {
     }
 
     return (
-        user ? <Container /> : <LoginForm onConnect={setUser} />
+        user ? <Container /> : <AdminLoginForm onConnect={setUser} />
     );
 }

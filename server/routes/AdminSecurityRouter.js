@@ -9,13 +9,29 @@ router
     .post("/login", (req, res) => {
         const {email, password} = req.body;
         if (email !== "" && password !== "") {
-            createJWT({email}).then((token) =>
-                res.json({
-                    token,
+            User.findOne({
+                where: {
+                    email: email
+                }
+            })
+                .then(user => {
+                    if (!user || !bcrypt.compareSync(password, user.password)) {
+                        return res.status(400).json({'message': 'Information invalides'});
+                    } else {
+                        createJWT({email}).then((token) =>
+                            res.json({
+                                token: token,
+                                message: 'Connexion effectué'
+                            })
+                        );
+                    }
                 })
-            );
+                .catch(err => {
+                    res.json({message: 'Une erreur est survenu'})
+                    res.status(500)
+                })
         } else {
-            res.sendStatus(401);
+            res.status(400).json({'message': 'Formulaire incomplet'});
         }
     });
 
