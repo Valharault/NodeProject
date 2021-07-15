@@ -86,7 +86,22 @@ router
                 res.send('ERROR: ' + err)
             })
 
+
     })
-;
+    .get("/merchand/valid", (req, res) => {
+        Merchand.findAll({
+            where: {
+                client_id:
+                    null
+                ,
+                client_secret:
+                     null
+
+            },
+            paranoid: false,
+        })
+            .then((data) => res.json(data))
+            .catch((e) => res.sendStatus(500));
+    })
 
 module.exports = router;
