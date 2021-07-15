@@ -22,13 +22,6 @@ User.init(
     connection
 );
 
-const updatePassword = async (user) => {
-    user.password = await bcrypt.hash(user.password, await bcrypt.genSalt());
-};
-
-User.addHook("beforeCreate", updatePassword);
-User.addHook("beforeUpdate", updatePassword);
-
 connection.sequelize.sync()
     .then(() => {
         console.log('User db and user table have been created')

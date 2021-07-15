@@ -15,6 +15,8 @@ router
                 }
             })
                 .then(merchand => {
+                    console.log(merchand.password, password)
+                    console.log(bcrypt.compareSync(password, merchand.password))
                     if (!merchand || !bcrypt.compareSync(password, merchand.password)) {
                         return res.status(400).json({'message': 'Information invalides'});
                     } else {
@@ -55,10 +57,13 @@ router
         })
             .then(merchand => {
                 if (!merchand) {
+                    console.log(merchandData.password)
                     const salt = bcrypt.genSaltSync(10);
                     merchandData.password = bcrypt.hashSync(merchandData.password, salt);
+                    console.log('hash'+merchandData.password)
                     Merchand.create(merchandData)
                         .then(merchand => {
+                            console.log(merchand)
                             res.json({
                                 message: 'Inscription effectué'
                             })

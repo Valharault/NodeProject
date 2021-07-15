@@ -30,13 +30,6 @@ Merchand.init(
     connection
 );
 
-const updatePassword = async (merchand) => {
-    merchand.password = await bcrypt.hash(merchand.password, await bcrypt.genSalt());
-};
-
-Merchand.addHook("beforeCreate", updatePassword);
-Merchand.addHook("beforeUpdate", updatePassword);
-
 connection.sequelize.sync()
     .then(() => {
         console.log('Merchand db and user table have been created')
