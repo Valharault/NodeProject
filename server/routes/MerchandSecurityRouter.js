@@ -15,15 +15,15 @@ router
                 }
             })
                 .then(merchand => {
-                    if (merchand) {
+                    if (!merchand || !bcrypt.compareSync(password, merchand.password)) {
+                        return res.status(400).json({'message': 'Information invalides'});
+                    } else {
                         createJWT({email}).then((token) =>
                             res.json({
                                 token: token,
                                 message: 'Connexion effectué'
                             })
                         );
-                    } else {
-                        return res.status(400).json({'message': 'Marchand non trouvé'});
                     }
                 })
                 .catch(err => {
@@ -31,7 +31,7 @@ router
                     res.status(500)
                 })
         } else {
-            res.status(400).json( {'message': 'Formulaire incomplet'});
+            res.status(400).json({'message': 'Formulaire incomplet'});
         }
     })
     .post("/register", (req, res) => {
@@ -55,18 +55,17 @@ router
         })
             .then(merchand => {
                 if (!merchand) {
-                    bcrypt.hash(merchandData.password, 10, (err, hash) => {
-                        merchandData.password = hash
-                        Merchand.create(merchandData)
-                            .then(merchand => {
-                                res.json({
-                                    message: 'Inscription effectué'
-                                })
+                    const salt = bcrypt.genSaltSync(10);
+                    merchandData.password = bcrypt.hashSync(merchandData.password, salt);
+                    Merchand.create(merchandData)
+                        .then(merchand => {
+                            res.json({
+                                message: 'Inscription effectué'
                             })
-                            .catch(err => {
-                                return res.status(500).json({'message': 'Une erreur est survenue'});
-                            })
-                    })
+                        })
+                        .catch(err => {
+                            return res.status(500).json({'message': 'Une erreur est survenue'});
+                        })
                 } else {
                     return res.status(400).json({'message': 'Le marchand existe déjà'});
                 }

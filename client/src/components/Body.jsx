@@ -15,6 +15,6 @@ export default function Body() {
     }
 
     return (
-        user ? <Container /> : <RegisterForm onConnect={setUser} />
+        user ? <Container /> : <LoginForm onConnect={setUser} />
     );
 }
