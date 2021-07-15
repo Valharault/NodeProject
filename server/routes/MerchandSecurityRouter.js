@@ -8,7 +8,6 @@ const router = Router();
 router
     .post("/login", (req, res) => {
         const {email, password} = req.body;
-        console.log(email, password)
         if (email !== "" && password !== "") {
             Merchand.findOne({
                 where: {
@@ -19,33 +18,36 @@ router
                     if (merchand) {
                         createJWT({email}).then((token) =>
                             res.json({
-                                token,
+                                token: token,
+                                message: 'Connexion effectué'
                             })
                         );
                     } else {
-                        res.json({error: "Marchand inconnu"})
+                        return res.status(400).json({'message': 'Marchand non trouvé'});
                     }
                 })
                 .catch(err => {
-                    res.send('ERROR: ' + err)
+                    res.json({message: 'Une erreur est survenu'})
+                    res.status(500)
                 })
         } else {
-            res.sendStatus(401);
+            res.status(400).json( {'message': 'Formulaire incomplet'});
         }
     })
     .post("/register", (req, res) => {
         const merchandData = {
-            firstname: req.body.firstname,
-            lastname: req.body.lastname,
-            phone_number: req.body.phone_number,
-            kbis: req.body.kbis,
-            society: req.body.society,
-            redirect_success: req.body.redirect_success,
-            redirect_cancel: req.body.redirect_cancel,
-            currency: req.body.currency,
-            email: req.body.email,
-            password: req.body.password
+            firstname: req.body.values.firstname,
+            lastname: req.body.values.lastname,
+            phone_number: req.body.values.phone_number,
+            kbis: req.body.values.kbis,
+            society: req.body.values.society,
+            redirect_success: req.body.values.redirect_success,
+            redirect_cancel: req.body.values.redirect_cancel,
+            currency: req.body.values.currency,
+            email: req.body.values.email,
+            password: req.body.values.password
         }
+        console.log(merchandData)
         Merchand.findOne({
             where: {
                 email: merchandData.email
@@ -57,18 +59,20 @@ router
                         merchandData.password = hash
                         Merchand.create(merchandData)
                             .then(merchand => {
-                                res.json({status: merchand + 'REGISTERED'})
+                                res.json({
+                                    message: 'Inscription effectué'
+                                })
                             })
                             .catch(err => {
-                                res.send('ERROR: ' + err)
+                                return res.status(500).json({'message': 'Une erreur est survenue'});
                             })
                     })
                 } else {
-                    res.json({error: "MERCHAND ALREADY EXISTS"})
+                    return res.status(400).json({'message': 'Le marchand existe déjà'});
                 }
             })
             .catch(err => {
-                res.send('ERROR: ' + err)
+                return res.status(500).json({'message': 'Une erreur est survenue'});
             })
     });
 module.exports = router;

@@ -1,15 +1,12 @@
 import React, {useState} from 'react';
 import {Button} from "react-bootstrap";
-import axios from "axios";
+import AuthService from "./../../../services/auth.service";
 
-export default function AdminLoginForm () {
+export default function AdminLoginForm() {
 
-    const [values, setValues] = useState(
-        {
-            email: null,
-            password: null
-        }
-    );
+    const [values, setValues] = useState({email: null, password: null});
+    const [message, setMessage] = useState(null)
+    const [successful, setSuccessful] = useState(false)
 
     const handleChange = (event) => {
         setValues({
@@ -20,15 +17,38 @@ export default function AdminLoginForm () {
 
     const handleSubmit = async function (event) {
         event.preventDefault()
-        axios.post(`http://localhost:4000/admin/security/login`, values)
-            .then(res => {
-                console.log(res);
-                console.log(res.data);
+        AuthService.adminLogin(
+            values.email,
+            values.password
+        ).then(
+            response => {
+                setMessage(response.message)
+                setSuccessful(true)
             })
+            .catch(function (error) {
+                if (error.response) {
+                    setMessage(error.response.message)
+                    setSuccessful(false)
+                }
+            });
     }
 
     return <form className="container mt-4" onSubmit={handleSubmit}>
         <h2>Connexion Admin</h2>
+        {message && (
+            <div className="form-group">
+                <div
+                    className={
+                        successful
+                            ? "alert alert-success"
+                            : "alert alert-danger"
+                    }
+                    role="alert"
+                >
+                    {message}
+                </div>
+            </div>
+        )}
         <div className="form-group">
             <label htmlFor="email">Email</label>
             <input type="text" name="email" id="email" className="form-control" required
@@ -39,6 +59,6 @@ export default function AdminLoginForm () {
             <input type="password" name="password" id="password" className="form-control" required
                    onChange={handleChange}/>
         </div>
-        <Button type="submit">Connexion</Button>
+        <Button type="submit">Se connecter</Button>
     </form>
 }

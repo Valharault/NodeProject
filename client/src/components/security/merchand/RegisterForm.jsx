@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {Button} from "react-bootstrap";
 import axios from "axios";
+import AuthService from "../../../services/auth.service";
 
 export default function RegisterForm() {
 
@@ -18,6 +19,9 @@ export default function RegisterForm() {
             password: null
         }
     );
+    const [message, setMessage] = useState(null)
+    const [successful, setSuccessful] = useState(false)
+
 
     const handleChange = (event) => {
         setValues({
@@ -28,15 +32,35 @@ export default function RegisterForm() {
 
     const handleSubmit = async function (event) {
         event.preventDefault()
-        axios.post(`http://localhost:4000/security/register`, values)
-            .then(res => {
-                console.log(res);
-                console.log(res.data);
+        AuthService.merchandRegister(values).then(
+            response => {
+                setMessage(response.message)
+                setSuccessful(true)
             })
+            .catch(function (error) {
+                if (error.response) {
+                    setMessage(error.response.data.message)
+                    setSuccessful(false)
+                }
+            });
     }
 
     return <form className="container mt-4" onSubmit={handleSubmit}>
         <h2>Inscription Marchand</h2>
+        {message && (
+            <div className="form-group">
+                <div
+                    className={
+                        successful
+                            ? "alert alert-success"
+                            : "alert alert-danger"
+                    }
+                    role="alert"
+                >
+                    {message}
+                </div>
+            </div>
+        )}
         <div className="row">
             <div className="col-md-12">
                 <div className="form-group">
