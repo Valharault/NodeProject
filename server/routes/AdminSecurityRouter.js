@@ -5,27 +5,35 @@ const bcrypt = require("bcryptjs");
 
 const router = Router();
 const crypto = require("crypto");
-const { sendEmail }   = require("../mailer/mail")
+const {sendEmail} = require("../mailer/mail")
 
 router
     .post("/login", (req, res) => {
         const {email, password} = req.body;
         if (email !== "" && password !== "") {
-            createJWT({email}).then((token) =>
-                res.json({
-                    token,
+            User.findOne({
+                where: {
+                    email: email
+                }
+            })
+                .then(user => {
+                    if (!user || !bcrypt.compareSync(password, user.password)) {
+                        return res.status(400).json({'message': 'Information invalides'});
+                    } else {
+                        createJWT({email}).then((token) =>
+                            res.json({
+                                token: token,
+                                message: 'Connexion effectué'
+                            })
+                        );
+                    }
                 })
-            );
+                .catch(err => {
+                    res.json({message: 'Une erreur est survenu'})
+                    res.status(500)
+                })
         } else {
-            res.sendStatus(401);
-        }
-    })
-    // A SUPPRIMER APRES
-    .post("/register", (req, res) => {
-        const {email, password} = req.body;
-        const userData = {
-            email: email,
-            password: password
+            res.status(400).json({'message': 'Formulaire incomplet'});
         }
         User.findOne({
             where: {
@@ -88,15 +96,18 @@ router
                         }).then(
                             (data) => {
                                 res.send(['client_id and client_secret generated for : ' + merchand.email, data])
-                                sendEmail(merchand.email, {firstname: merchand.firstname, lastname: merchand.lastname}, "Validate");
+                                sendEmail(merchand.email, {
+                                    firstname: merchand.firstname,
+                                    lastname: merchand.lastname
+                                }, "Validate");
                             }
                         )
                             .catch(err => {
                                 res.send(['ERROR: ' + err, 500])
                             })
                     }).catch(err => {
-                            res.send(['ERROR: ' + err, 500])
-                        })
+                        res.send(['ERROR: ' + err, 500])
+                    })
 
                 }
             })
@@ -113,13 +124,13 @@ router
                     null
                 ,
                 client_secret:
-                     null
+                    null
 
             },
             paranoid: false,
         })
             .then((data) => res.json(data))
             .catch((e) => res.sendStatus(500));
-    })
+    });
 
 module.exports = router;

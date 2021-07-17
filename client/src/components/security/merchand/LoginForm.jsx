@@ -1,44 +1,62 @@
 import React, {useState} from 'react';
 import {Button} from "react-bootstrap";
-import axios from "axios";
+import AuthService from "./../../../services/auth.service";
+import {useForm} from "react-hook-form";
 
-export default function LoginForm () {
+export default function LoginForm() {
+    const [message, setMessage] = useState(null)
+    const [successful, setSuccessful] = useState(false)
 
-    const [values, setValues] = useState(
-        {
-            email: null,
-            password: null
-        }
-    );
+    const {
+        register,
+        handleSubmit,
+        formState: {errors},
+    } = useForm();
 
-    const handleChange = (event) => {
-        setValues({
-            ...values,
-            [event.target.name]: event.target.value,
-        });
-    };
-
-    const handleSubmit = async function (event) {
-        event.preventDefault()
-        axios.post(`http://localhost:4000/security/login`, values)
-            .then(res => {
-                console.log(res);
-                console.log(res.data);
+    const onSubmit = async function (data) {
+        console.log(data.email)
+        AuthService.merchandLogin(
+            data.email,
+            data.password
+        ).then(
+            response => {
+                setMessage(response.message)
+                setSuccessful(true)
             })
+            .catch(function (error) {
+                if (error.response) {
+                    setMessage(error.response.data.message)
+                    setSuccessful(false)
+                }
+            });
     }
 
-    return <form className="container mt-4" onSubmit={handleSubmit}>
+    return <form className="container mt-4" onSubmit={handleSubmit(onSubmit)}>
         <h2>Connexion Marchand</h2>
+        {message && (
+            <div className="form-group">
+                <div
+                    className={
+                        successful
+                            ? "alert alert-success"
+                            : "alert alert-danger"
+                    }
+                    role="alert"
+                >
+                    {message}
+                </div>
+            </div>
+        )}
         <div className="form-group">
             <label htmlFor="email">Email</label>
-            <input type="text" name="email" id="email" className="form-control" required
-                   onChange={handleChange}/>
+            <input className={'form-control'} type="email" placeholder="Email" {...register("email", {required: true})} />
+            {errors.email && <p>L'email n'est pas valide</p>}
         </div>
         <div className="form-group">
             <label htmlFor="password">Mot de passe</label>
-            <input type="password" name="password" id="password" className="form-control" required
-                   onChange={handleChange}/>
+            <input className={'form-control'} type="password" placeholder="Mot de passe" {...register("password", {required: true})} />
+            {errors.password && <p>Veuillez renseigner un mot de passe</p>}
         </div>
-        <Button type="submit">Se connecter</Button>
+        <Button type="submit">Connexion</Button>
     </form>
 }
