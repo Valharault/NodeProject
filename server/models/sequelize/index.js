@@ -18,8 +18,8 @@ const denormalizeMerchand = (merchand) => {
 User.addHook("afterCreate", denormalizeUser);
 User.addHook("afterUpdate", denormalizeUser);
 
-Merchand.addHook("afterCreate", denormalizeMerchand);
-Merchand.addHook("afterUpdate", denormalizeMerchand);
+// Merchand.addHook("afterCreate", denormalizeMerchand);
+// Merchand.addHook("afterUpdate", denormalizeMerchand);
 
 module.exports = {
     User,

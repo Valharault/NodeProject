@@ -4,7 +4,6 @@ import axios from "axios";
 
 export default function AdminValidAccount () {
 
-
     const SimpleList = ({ list }) => (
         <table className="table mt-5">
             <thead className="thead-light">

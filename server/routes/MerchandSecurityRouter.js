@@ -2,6 +2,7 @@ const {createJWT} = require("../lib/security");
 const {Router} = require("express");
 const {Merchand} = require("../models/sequelize");
 const bcrypt = require("bcryptjs");
+const {sendEmail} = require("../mailer/mail")
 
 const router = Router();
 
@@ -15,8 +16,6 @@ router
                 }
             })
                 .then(merchand => {
-                    console.log(merchand.password, password)
-                    console.log(bcrypt.compareSync(password, merchand.password))
                     if (!merchand || !bcrypt.compareSync(password, merchand.password)) {
                         return res.status(400).json({'message': 'Information invalides'});
                     } else {
@@ -49,7 +48,6 @@ router
             email: req.body.values.email,
             password: req.body.values.password
         }
-        console.log(merchandData)
         Merchand.findOne({
             where: {
                 email: merchandData.email
@@ -57,16 +55,18 @@ router
         })
             .then(merchand => {
                 if (!merchand) {
-                    console.log(merchandData.password)
                     const salt = bcrypt.genSaltSync(10);
                     merchandData.password = bcrypt.hashSync(merchandData.password, salt);
-                    console.log('hash' + merchandData.password)
                     Merchand.create(merchandData)
                         .then(merchand => {
-                            console.log(merchand)
                             res.json({
                                 message: 'Inscription effectué'
                             })
+                            sendEmail(merchand.email, {
+                                firstname: merchand.firstname,
+                                lastname: merchand.lastname
+                            }, "Registration");
+
                         })
                         .catch(err => {
                             return res.status(500).json({'message': 'Une erreur est survenue'});
