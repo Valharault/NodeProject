@@ -1,34 +1,34 @@
 import axios from "axios";
+import jwt_decode from "jwt-decode";
 
-const API_URL = "http://localhost:4000";
+const API_URL = "http://localhost:4000/api";
 
 class AuthService {
 
     adminLogin(email, password) {
         return axios
-            .post(API_URL + "/admin/security/login", {
+            .post(API_URL + "/admin/login", {
                 email,
                 password
             })
             .then(response => {
                 if (response.data.token) {
-                    localStorage.setItem("user", JSON.stringify(response.data));
+                    localStorage.setItem("token", JSON.stringify(response.data.token));
                 }
 
                 return response.data;
             });
     }
 
-
     merchandLogin(email, password) {
         return axios
-            .post(API_URL + "/security/login", {
+            .post(API_URL + "/login", {
                 email,
                 password
             })
             .then(response => {
                 if (response.data.token) {
-                    localStorage.setItem("user", JSON.stringify(response.data));
+                    localStorage.setItem("token", JSON.stringify(response.data.token));
                 }
 
                 return response.data;
@@ -36,18 +36,21 @@ class AuthService {
     }
 
     logout() {
-        localStorage.removeItem("user");
+        localStorage.removeItem("token");
     }
 
     merchandRegister(values) {
-        console.log(values)
-        return axios.post(API_URL + "/security/register", {values}).then(response => {
+        return axios.post(API_URL + "/register", {values}).then(response => {
             return response.data;
         });
     }
 
     getCurrentUser() {
-        return JSON.parse(localStorage.getItem('user'));
+        if (!localStorage.getItem('token')) {
+            return null;
+        }
+        let token = JSON.parse(localStorage.getItem('token'));
+        return jwt_decode(token);
     }
 }
 

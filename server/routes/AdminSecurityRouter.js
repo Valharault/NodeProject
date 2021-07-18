@@ -20,7 +20,11 @@ router
                     if (!user || !bcrypt.compareSync(password, user.password)) {
                         return res.status(400).json({'message': 'Information invalides'});
                     } else {
-                        createJWT({email}).then((token) =>
+                        let user = {
+                            id: user.id,
+                            roles: ['admin']
+                        }
+                        createJWT({user}).then((token) =>
                             res.json({
                                 token: token,
                                 message: 'Connexion effectué'

@@ -19,6 +19,7 @@ export default function RegisterForm() {
             response => {
                 setMessage(response.message)
                 setSuccessful(true)
+                window.location.reload()
             })
             .catch(function (error) {
                 if (error.response) {
