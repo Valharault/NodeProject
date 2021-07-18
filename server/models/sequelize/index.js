@@ -23,5 +23,5 @@ User.addHook("afterUpdate", denormalizeUser);
 
 module.exports = {
     User,
-    Merchand
+    Merchand,
 };

@@ -10,6 +10,8 @@ const {sendEmail} = require("../mailer/mail")
 router
     .post("/login", (req, res) => {
         const {email, password} = req.body;
+
+
         if (email !== "" && password !== "") {
             User.findOne({
                 where: {
@@ -34,15 +36,21 @@ router
                 })
         } else {
             res.status(400).json({'message': 'Formulaire incomplet'});
-        }
+        }})
+        .post('/register', (req, res) => {
+
+            const userData = {
+                email: req.body.email,
+                password: req.body.password
+            }
         User.findOne({
             where: {
-                email: email
+                email: userData.email
             }
         })
             .then(user => {
                 if (!user) {
-                    bcrypt.hash(password, 10, (err, hash) => {
+                    bcrypt.hash(userData.password, 10, (err, hash) => {
                         userData.password = hash
                         User.create(userData)
                             .then(user => {
@@ -85,11 +93,6 @@ router
 
                         Merchand.findAll({
                             where: {
-                                client_id:
-                                    null
-                                ,
-                                client_secret:
-                                    null
 
                             },
                             paranoid: false,
@@ -120,11 +123,6 @@ router
     .get("/merchand/valid", (req, res) => {
         Merchand.findAll({
             where: {
-                client_id:
-                    null
-                ,
-                client_secret:
-                    null
 
             },
             paranoid: false,
