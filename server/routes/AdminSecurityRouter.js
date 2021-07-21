@@ -1,17 +1,16 @@
-const { isEmpty } = require("../lib/functions");
-const { createJWT } = require("../lib/security");
-const { Router } = require("express");
-const { User, Merchand } = require("../models/sequelize");
+const {createJWT} = require("../lib/security");
+const {Router} = require("express");
+const {User, Merchand} = require("../models/sequelize");
 const bcrypt = require("bcryptjs");
 
 const router = Router();
 const crypto = require("crypto");
-const { sendEmail } = require("../mailer/mail")
+const {sendEmail} = require("../mailer/mail")
 
 router
     .post("/login", (req, res) => {
-        const { email, password } = req.body;
-        if (!isEmpty(email) && !isEmpty(password)) {
+        const {email, password} = req.body;
+        if (email !== "" && password !== "") {
             User.findOne({
                 where: {
                     email: email
@@ -19,13 +18,13 @@ router
             })
                 .then(user => {
                     if (!user || !bcrypt.compareSync(password, user.password)) {
-                        return res.status(400).json({ 'message': 'Information invalides' });
+                        return res.status(400).json({'message': 'Information invalides'});
                     } else {
                         let user = {
                             id: user.id,
                             roles: ['admin']
                         }
-                        createJWT({ user }).then((token) =>
+                        createJWT({user}).then((token) =>
                             res.json({
                                 token: token,
                                 message: 'Connexion effectué'
@@ -34,11 +33,11 @@ router
                     }
                 })
                 .catch(err => {
+                    res.json({message: 'Une erreur est survenu'})
                     res.status(500)
-                    res.json({ message: 'Une erreur est survenu' })
                 })
         } else {
-            res.status(400).json({ 'message': 'Formulaire incomplet' });
+            res.status(400).json({'message': 'Formulaire incomplet'});
         }
         User.findOne({
             where: {
@@ -51,23 +50,23 @@ router
                         userData.password = hash
                         User.create(userData)
                             .then(user => {
-                                res.json({ status: user + 'REGISTERED' })
+                                res.json({status: user + 'REGISTERED'})
                             })
                             .catch(err => {
                                 res.send('ERROR: ' + err)
                             })
                     })
                 } else {
-                    res.json({ error: "USER ALREADY EXISTS" })
+                    res.json({error: "USER ALREADY EXISTS"})
                 }
-            }).catch(err => {
-                res.status(500);
-                res.json({ error: err })
+            })
+            .catch(err => {
+                res.send('ERROR: ' + err)
             })
     })
-    //Generate credential when validate account
+    //Generate credential whan validate account
     .post('/credentials', (req, res) => {
-        const { email } = req.body;
+        const {email} = req.body;
         Merchand.findOne({
             where: {
                 email: email
@@ -75,9 +74,9 @@ router
         })
             .then(merchand => {
                 if (!merchand) {
-                    res.json({ error: "MERCHAND DON'T EXIST" })
+                    res.json({error: "MERCHAND DON'T EXIST"})
                 } else if (merchand.client_id != null || merchand.client_secret != null) {
-                    res.json({ error: "Merchand already has his credentials" })
+                    res.json({error: "Merchand already has his credentials"})
                 } else {
                     const client_id = crypto.randomBytes(16).toString("hex");
                     const client_secret = crypto.randomBytes(16).toString("hex");

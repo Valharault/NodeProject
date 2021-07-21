@@ -34,8 +34,8 @@ const sendEmail = (to, dataFields, type) => {
     const smtpTransport = mailer.createTransport({
             service: "Gmail",
             auth: {
-                user: "projetreactnode@gmail.com",
-                pass: 'GroupeProjet'
+                user: "martinpetit1998@gmail.com",
+                pass: 'Martin92pmkygti8'
             },
             tls: {
                 rejectUnauthorized: false
