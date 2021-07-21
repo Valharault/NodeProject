@@ -16,7 +16,6 @@ import {
 
 export default function AdminChart(props) {
 
-    console.log(props.value[2]);
 
     //1 : PIE CHART
 

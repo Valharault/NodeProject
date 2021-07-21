@@ -14,7 +14,8 @@ router.get("/merchand/:id", (req, res) => {
 })
     .get('/dashboard', (req, res) => {
 
-        const findNonActiveAccount =   Merchand.count({
+
+        const findNonActiveAccount = Merchand.count({
             where: [{'client_id': null}, {'client_secret': null}],
             distinct: 'id' // since count is applied on Product model and distinct is directly passed to its object so Product.id will be selected
         });
@@ -40,10 +41,14 @@ router.get("/merchand/:id", (req, res) => {
             raw:true
         })
 
+        const findAllMerchand = Merchand.findAll({
+            paranoid: false,
+        })
+
         Promise
-            .all([findNonActiveAccount, findActiveAccount, registrationByDates])
+            .all([findNonActiveAccount, findActiveAccount, registrationByDates, findAllMerchand])
             .then(responses => {
-               res.json([  responses[0],  responses[1], responses[2]])
+               res.json([  responses[0],  responses[1], responses[2], responses[3]])
             })
             .catch(err => {
                 console.log('**********ERROR RESULT****************');
