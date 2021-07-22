@@ -8,18 +8,24 @@ export default function AdminTransactions () {
         <table className="table mt-5">
             <thead className="thead-light">
             <tr>
-                <th scope="col">Prix</th>
+                <th scope="col">Client</th>
                 <th scope="col">Date</th>
                 <th scope="col">Produit</th>
+                <th scope="col">Prix</th>
+                <th scope="col">Statut</th>
+                <th scope="col">Marchand</th>
             </tr>
             </thead>
             <tbody>
             {list.map(item => (
 
                 <tr key={item.id}>
-                    <td>{item.Price}</td>
-                    <td>{item.Date}</td>
-                    <td>{item.Product}</td>
+                    <td>{item.firstname} {item.lastname}<br></br>{item.email}</td>
+                    <td>{item.createdAt}</td>
+                    <td>{item.shop.product} {item.shop.type} <br></br> {item.shop.couleur}</td>
+                    <td>{item.price}</td>
+                    <td>{item.state}</td>
+                    <td>{item.merchand.firstname} {item.merchand.lastname}<br></br>{item.merchand.email}</td>
                 </tr>
 
             ))}

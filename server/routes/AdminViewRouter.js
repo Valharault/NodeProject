@@ -1,7 +1,7 @@
 const {Sequelize} = require("sequelize");
 const {Op} = require("sequelize");
 const {Router} = require("express");
-const {User, Merchand} = require("../models/sequelize");
+const {User, Merchand, Transaction} = require("../models/sequelize");
 const router = Router();
 
 
@@ -12,24 +12,38 @@ router.get("/merchand/:id", (req, res) => {
         .then((data) => (data !== null ? res.json(data) : res.sendStatus(404)))
         .catch((e) => res.sendStatus(500));
 })
-    .get('/dashboard', (req, res) => {
+    .get('/dashboard/:merchand', (req, res) => {
+        let whereObject = {};
+        let whereObjectMarchand = {};
+        const { merchand } = req.params;
+        // CHeck for queries in url
+        if(merchand !== '0'){
+            whereObject = {
+                id: merchand
+            };
 
+            whereObjectMarchand = {
+                'merchandId': merchand
+            };
+        }
 
         const findNonActiveAccount = Merchand.count({
-            where: [{'client_id': null}, {'client_secret': null}],
-            distinct: 'id' // since count is applied on Product model and distinct is directly passed to its object so Product.id will be selected
+            where: [{'client_id': null}, {'client_secret': null}, whereObject]
+            // since count is applied on Product model and distinct is directly passed to its object so Product.id will be selected
         });
 
         const findActiveAccount =       Merchand.count({
-            where: {
-                client_id: {
-                    [Op.not]: null
+            where: [
+                {
+                    client_id: {
+                        [Op.not]: null
+                    },
+                    client_secret: {
+                        [Op.not]: null
+                    },
+
                 },
-                client_secret: {
-                    [Op.not]: null
-                }
-            },
-            distinct: 'id' // since count is applied on Product model and distinct is directly passed to its object so Product.id will be selected
+                whereObject]// since count is applied on Product model and distinct is directly passed to its object so Product.id will be selected
         })
 
         const registrationByDates = Merchand.findAll({
@@ -41,20 +55,44 @@ router.get("/merchand/:id", (req, res) => {
             raw:true
         })
 
+        const findAllTransaction = Transaction.count({
+            where: [whereObjectMarchand],
+            distinct: 'id' // since count is applied on Product model and distinct is directly passed to its object so Product.id will be selected
+        });
+
+        const findAvgPriceTransaction = Transaction.findAll({
+            attributes: [[Sequelize.fn('AVG', Sequelize.col('price')), 'avgPrice']],
+            where: [whereObjectMarchand],
+        })
+
         const findAllMerchand = Merchand.findAll({
             paranoid: false,
         })
 
         Promise
-            .all([findNonActiveAccount, findActiveAccount, registrationByDates, findAllMerchand])
+            .all([findNonActiveAccount, findActiveAccount, registrationByDates, findAllMerchand, findAllTransaction, findAvgPriceTransaction])
             .then(responses => {
-               res.json([  responses[0],  responses[1], responses[2], responses[3]])
+               res.json([  responses[0],  responses[1], responses[2], responses[3], responses[4], responses[5]])
             })
             .catch(err => {
                 console.log('**********ERROR RESULT****************');
                 console.log(err);
             });
      })
+    .get('/transactions', (req, res ) => {
+        Transaction.findAll({
+            where: {
+
+            },
+            include: [{
+                model: Merchand,
+                as: 'merchand'
+            }],
+            paranoid: false,
+        })
+            .then((data) => res.json(data))
+            .catch((e) => res.sendStatus(500));
+    })
 
 
 
