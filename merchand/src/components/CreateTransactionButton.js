@@ -12,6 +12,7 @@ export default function CreateTransactionButton() {
             consumer: {
                 lastname: "Foo",
                 firstname: "Bart",
+                email: "test@gmail.com"
             },
             billingAddress: {
                 address: "1 rue Bouvier",
@@ -30,7 +31,7 @@ export default function CreateTransactionButton() {
             },
         };
 
-        fetch("http://localhost:4000/api/transactions", {
+        fetch("http://localhost:4000/api/transactions/de", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -39,7 +40,7 @@ export default function CreateTransactionButton() {
             body: JSON.stringify(data),
         })
             .then((res) => res.json())
-            .then((data) => console.log(data));
+            .then((data) => window.location.href = data.url);
     };
 
     return (

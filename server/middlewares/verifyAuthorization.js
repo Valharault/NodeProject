@@ -22,7 +22,7 @@ module.exports = function (options) {
                         Merchand.findOne({where: {client_id: credentials[0], client_secret: credentials[1]}})
                             .then(merchand => {
                                 if (merchand !== null) {
-                                    req.merchant = merchand;
+                                    req.merchand = merchand;
                                     next();
                                 } else {
                                     res.sendStatus(401)
@@ -36,7 +36,7 @@ module.exports = function (options) {
                     .then((user) => {
                         // Load user from db
                         req.user = user;
-                        req.merchant = user.merchant;
+                        req.merchand = user.merchand;
                         next();
                     })
                     .catch(() => res.sendStatus(401));

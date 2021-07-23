@@ -7,6 +7,8 @@ import CredentialProvider from "./contexts/CredentialContext";
 import ListProvider from "./contexts/ListContext";
 import {BrowserRouter, Switch, Route} from "react-router-dom";
 import {Container} from "react-bootstrap";
+import CancelPage from "./components/CancelPage";
+import SuccessPage from "./components/SuccessPage";
 
 function App() {
     return (
@@ -27,6 +29,12 @@ function App() {
                             <Route exact path="/items/:id">
                                 <Header/>
                                 <ShowItem/>
+                            </Route>
+                            <Route exact path="/paiement/cancel">
+                                <CancelPage/>
+                            </Route>
+                            <Route exact path="/paiement/success">
+                                <SuccessPage/>
                             </Route>
                         </ListProvider>
                     </Switch>

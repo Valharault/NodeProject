@@ -1,5 +1,6 @@
 const User = require("./User");
 const Merchand = require("./Merchand");
+const Transaction = require("./Transaction");
 
 const denormalizeUser = (user) => {
     User.findByPk(user.id).then((data) => {
@@ -23,5 +24,6 @@ User.addHook("afterUpdate", denormalizeUser);
 
 module.exports = {
     User,
-    Merchand
+    Merchand,
+    Transaction
 };
