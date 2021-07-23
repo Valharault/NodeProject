@@ -8,62 +8,6 @@ const crypto = require("crypto");
 const {sendEmail} = require("../mailer/mail")
 
 router
-    .post("/login", (req, res) => {
-        const {email, password} = req.body;
-        if (email !== "" && password !== "") {
-            User.findOne({
-                where: {
-                    email: email
-                }
-            })
-                .then(user => {
-                    if (!user || !bcrypt.compareSync(password, user.password)) {
-                        return res.status(400).json({'message': 'Information invalides'});
-                    } else {
-                        let user = {
-                            id: user.id,
-                            roles: ['admin']
-                        }
-                        createJWT({user}).then((token) =>
-                            res.json({
-                                token: token,
-                                message: 'Connexion effectué'
-                            })
-                        );
-                    }
-                })
-                .catch(err => {
-                    res.json({message: 'Une erreur est survenu'})
-                    res.status(500)
-                })
-        } else {
-            res.status(400).json({'message': 'Formulaire incomplet'});
-        }
-        User.findOne({
-            where: {
-                email: email
-            }
-        })
-            .then(user => {
-                if (!user) {
-                    bcrypt.hash(password, 10, (err, hash) => {
-                        userData.password = hash
-                        User.create(userData)
-                            .then(user => {
-                                res.json({status: user + 'REGISTERED'})
-                            })
-                            .catch(err => {
-                                res.send('ERROR: ' + err)
-                            })
-                    })
-                } else {
-                    res.json({error: "USER ALREADY EXISTS"})
-                }
-            })
-            .catch(err => {
-                res.send('ERROR: ' + err)
-            })
-    })
     //Generate credential whan validate account
     .post('/credentials', (req, res) => {
         const {email} = req.body;

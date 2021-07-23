@@ -7,38 +7,6 @@ const {sendEmail} = require("../mailer/mail")
 const router = Router();
 
 router
-    .post("/login", (req, res) => {
-        const {email, password} = req.body;
-        if (email !== "" && password !== "") {
-            Merchand.findOne({
-                where: {
-                    email: email
-                }
-            })
-                .then(merchand => {
-                    if (!merchand || !bcrypt.compareSync(password, merchand.password)) {
-                        return res.status(400).json({'message': 'Information invalides'});
-                    } else {
-                        let user = {
-                            id: merchand.id,
-                            roles: ['merchand']
-                        }
-                        createJWT({user}).then((token) =>
-                            res.json({
-                                token: token,
-                                message: 'Connexion effectué'
-                            })
-                        );
-                    }
-                })
-                .catch(err => {
-                    res.json({message: 'Une erreur est survenu'})
-                    res.status(500)
-                })
-        } else {
-            res.status(400).json({'message': 'Formulaire incomplet'});
-        }
-    })
     .post("/register", (req, res) => {
         const merchandData = {
             firstname: req.body.values.firstname,
@@ -82,5 +50,114 @@ router
             .catch(err => {
                 return res.status(500).json({'message': 'Une erreur est survenue'});
             })
-    });
+    })
+    .post("/login", (req, res) => {
+        const {email, password} = req.body;
+        if (email !== "" && password !== "") {
+            Merchand.findOne({
+                where: {
+                    email: email
+                }
+            })
+                .then(merchand => {
+                    if (!merchand || !bcrypt.compareSync(password, merchand.password)) {
+                        return res.status(400).json({'message': 'Information invalides'});
+                    } else {
+                        let user = {
+                            id: merchand.id,
+                            roles: ['merchand']
+                        }
+                        createJWT({user}).then((token) =>
+                            res.json({
+                                token: token,
+                                message: 'Connexion effectué'
+                            })
+                        );
+                    }
+                })
+                .catch(err => {
+                    res.json({message: 'Une erreur est survenu'})
+                    res.status(500)
+                })
+        } else {
+            res.status(400).json({'message': 'Formulaire incomplet'});
+        }
+    })
+    .post("/merchand-credential", (req, res) => {
+        const {clientId, clientSecret} = req.body;
+        if (clientId !== "" && clientSecret !== "") {
+            Merchand.findOne({where: {client_id: clientId, client_secret: clientSecret}})
+                .then(merchand => {
+                    if (merchand !== null) {
+                        res.json({
+                            message: 'Connexion effectué',
+                            successfull: true
+                        })
+                    } else {
+                        res.status(500).res.json({message: 'Clé incorrect'})
+                    }
+                })
+                .catch(err => {
+                    res.status(500).json({message: 'Une erreur est survenu'})
+                })
+        } else {
+            res.status(400).json({'message': 'Formulaire incomplet'});
+        }
+    })
+    .post("/admin/login", (req, res) => {
+        const {email, password} = req.body;
+        if (email !== "" && password !== "") {
+            User.findOne({
+                where: {
+                    email: email
+                }
+            })
+                .then(user => {
+                    if (!user || !bcrypt.compareSync(password, user.password)) {
+                        return res.status(400).json({'message': 'Information invalides'});
+                    } else {
+                        let user = {
+                            id: user.id,
+                            roles: ['admin']
+                        }
+                        createJWT({user}).then((token) =>
+                            res.json({
+                                token: token,
+                                message: 'Connexion effectué'
+                            })
+                        );
+                    }
+                })
+                .catch(err => {
+                    res.json({message: 'Une erreur est survenu'})
+                    res.status(500)
+                })
+        } else {
+            res.status(400).json({'message': 'Formulaire incomplet'});
+        }
+        User.findOne({
+            where: {
+                email: email
+            }
+        })
+            .then(user => {
+                if (!user) {
+                    bcrypt.hash(password, 10, (err, hash) => {
+                        userData.password = hash
+                        User.create(userData)
+                            .then(user => {
+                                res.json({status: user + 'REGISTERED'})
+                            })
+                            .catch(err => {
+                                res.send('ERROR: ' + err)
+                            })
+                    })
+                } else {
+                    res.json({error: "USER ALREADY EXISTS"})
+                }
+            })
+            .catch(err => {
+                res.send('ERROR: ' + err)
+            })
+    })
 module.exports = router;
