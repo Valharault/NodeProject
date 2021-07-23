@@ -12,7 +12,7 @@ const getEmailData = (to, dataFields, template) => {
                 from: "martinpetit1998@gmail.com",
                 to,
                 subject: `Inscription`,
-                html: Registration()
+                html: Registration(dataFields)
             }
             break;
         case "Validate" :

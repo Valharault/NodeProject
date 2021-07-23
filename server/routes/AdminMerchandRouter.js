@@ -1,14 +1,11 @@
-const {createJWT} = require("../lib/security");
 const {Router} = require("express");
-const {User, Merchand} = require("../models/sequelize");
-const bcrypt = require("bcryptjs");
+const {Merchand} = require("../models/sequelize");
 
 const router = Router();
 const crypto = require("crypto");
 const {sendEmail} = require("../mailer/mail")
 
 router
-    //Generate credential whan validate account
     .post('/credentials', (req, res) => {
         const {email} = req.body;
         Merchand.findOne({
@@ -33,11 +30,6 @@ router
 
                         Merchand.findAll({
                             where: {
-                                client_id:
-                                    null
-                                ,
-                                client_secret:
-                                    null
 
                             },
                             paranoid: false,
@@ -68,11 +60,6 @@ router
     .get("/merchand/valid", (req, res) => {
         Merchand.findAll({
             where: {
-                client_id:
-                    null
-                ,
-                client_secret:
-                    null
 
             },
             paranoid: false,

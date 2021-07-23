@@ -17,7 +17,6 @@ export default function AdminLoginForm() {
     } = useForm();
 
     const onSubmit = async function (data) {
-        console.log(data.email)
         AuthService.adminLogin(
             data.email,
             data.password
@@ -25,12 +24,12 @@ export default function AdminLoginForm() {
             response => {
                 setMessage(response.message)
                 setSuccessful(true)
-                history.push("/admin/account")
+                history.push("/admin")
                 window.location.reload()
             })
             .catch(function (error) {
                 if (error.response) {
-                    setMessage(error.response.message)
+                    setMessage(error.response.data.message)
                     setSuccessful(false)
                 }
             });
