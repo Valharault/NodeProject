@@ -79,19 +79,43 @@ router.get("/merchand/:id", (req, res) => {
                 console.log(err);
             });
      })
-    .get('/transactions', (req, res ) => {
-        Transaction.findAll({
-            where: {
+    .get('/transactions/:merchand', (req, res ) => {
 
-            },
+        let whereObjectMarchand = {};
+        const { merchand } = req.params;
+
+        if(merchand !== '0'){
+
+            whereObjectMarchand = {
+                'merchandId': merchand
+            };
+        }
+
+        const transactions = Transaction.findAll({
+            where: [
+                whereObjectMarchand
+            ]
+
+            ,
             include: [{
                 model: Merchand,
                 as: 'merchand'
             }],
             paranoid: false,
         })
-            .then((data) => res.json(data))
-            .catch((e) => res.sendStatus(500));
+
+        const findAllMerchand = Merchand.findAll({
+            paranoid: false,
+        })
+        Promise
+            .all([transactions, findAllMerchand])
+            .then(responses => {
+                res.json([  responses[0],  responses[1]])
+            })
+            .catch(err => {
+                console.log('**********ERROR RESULT****************');
+                console.log(err);
+            });
     })
 
 
