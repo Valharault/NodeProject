@@ -1,5 +1,5 @@
-import React, {Component, useState} from 'react';
-import {Container, Navbar, Nav, NavDropdown} from "react-bootstrap";
+import React from 'react';
+import {Container, Navbar, Nav} from "react-bootstrap";
 import {Link} from "react-router-dom";
 
 export default function DefaultNavbar() {

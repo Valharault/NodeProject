@@ -1,0 +1,21 @@
+<html>
+<head>
+</head>
+<body>
+<ul>
+    {{#items}}
+        <li>{{title}} {{quantity}}</li>
+    {{/items}}
+</ul>
+{{#success}}Payment proceed{{/success}}
+<form method="POST">
+    <input name="cardNumber"/>
+    <input name="cardExpirationDate"/>
+    <input name="cardCVV"/>
+    <input type="submit" value="Payer"/>
+    <a href="http://localhost:3000/paiement/cancel">
+        <button>Annuler le paiement</button>
+    </a>
+</form>
+</body>
+</html>

@@ -1,4 +1,6 @@
 const verifJWT = require("../lib/security").verifJWT;
+const verifBasic = require("../lib/security").verifBasic;
+const {Merchand} = require("../models/sequelize");
 
 module.exports = function (options) {
     return function verifyAuthorization(req, res, next) {
@@ -11,16 +13,30 @@ module.exports = function (options) {
         const [type, token] = authorization.split(/\s+/);
         switch (type) {
             case "Basic":
-                //verifBasic(token))
-                //.then(credentials => {req.merchant = credentials.merchant; next();})
-                //.catch(() => res.sendStatus(401))
+                if(token === null) {
+                    res.sendStatus(401);
+                    break;
+                }
+                verifBasic(token)
+                    .then((credentials) => {
+                        Merchand.findOne({where: {client_id: credentials[0], client_secret: credentials[1]}})
+                            .then(merchand => {
+                                if (merchand !== null) {
+                                    req.merchand = merchand;
+                                    next();
+                                } else {
+                                    res.sendStatus(401)
+                                }
+                            })
+                    })
+                    .catch(() => res.sendStatus(401));
                 break;
             case "Bearer":
                 verifJWT(token)
                     .then((user) => {
                         // Load user from db
                         req.user = user;
-                        req.merchant = user.merchant;
+                        req.merchand = user.merchand;
                         next();
                     })
                     .catch(() => res.sendStatus(401));

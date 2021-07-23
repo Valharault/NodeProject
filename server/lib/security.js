@@ -24,3 +24,16 @@ exports.createJWT = function createJWT(user) {
         )
     );
 };
+
+exports.verifBasic = function verifBasic(token) {
+    const credentials = atob(token).split(':');
+    if (credentials[0] !== undefined && credentials[1] !== undefined) {
+        return new Promise((res, rej) =>
+            res(credentials)
+        );
+    }
+
+    return new Promise((res, rej) =>
+        rej('incomplet')
+    );
+};
