@@ -13,7 +13,7 @@ module.exports = function (options) {
         const [type, token] = authorization.split(/\s+/);
         switch (type) {
             case "Basic":
-                if(token === null) {
+                if (token === null) {
                     res.sendStatus(401);
                     break;
                 }

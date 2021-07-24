@@ -12,8 +12,8 @@ Operation.init(
     connection
 );
 
-Transaction.transactions = Transaction.hasMany(Operation, {
-    as: "operations",
+Transaction.Operations = Transaction.hasMany(Operation, {
+    as: "Operations",
     foreignKey: "transactionId",
 });
 Operation.belongsTo(Transaction, { as: "transaction" }); // unique author
