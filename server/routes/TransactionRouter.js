@@ -1,6 +1,5 @@
 const {Router} = require("express");
-const {Transaction} = require("../models/sequelize");
-const bcrypt = require("bcryptjs");
+const {Transaction, TransactionStatus} = require("../models/sequelize");
 
 const router = Router();
 
@@ -25,19 +24,18 @@ router
         }
         Transaction.create(transactionData)
             .then(transaction => {
-                res.json({
-                    url: req.protocol + '://' + req.get('host') + "/payment/" + transaction.id
+                TransactionStatus.create({status: 'Pending', transactionId: transaction.id})
+                    .then(transactionStatus =>
+                        res.json({
+                            url: req.protocol + '://' + req.get('host') + "/payment/" + transaction.id
+                        })
+                    ).catch(err => {
+                    console.log(err)
+                    return res.status(500).json({'message': 'Une erreur est survenue'});
                 })
             }).catch(err => {
             return res.status(500).json({'message': 'Une erreur est survenue'});
         })
-    })
-    .post("/payment/:id", (req, res) => {
-        // AFFICHER UNE VUE COTE BACK GRACE A MUSTACHE
-
-        // UNE FOIS VALIDER CA PART COTE PSP ET TU REDIRIGE VERS PAGE CONFIRMATION
-
-        // SINON PAGE CANCEL
     })
 
 module.exports = router;

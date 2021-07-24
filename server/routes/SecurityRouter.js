@@ -1,6 +1,6 @@
 const {createJWT} = require("../lib/security");
 const {Router} = require("express");
-const {Merchand} = require("../models/sequelize");
+const {Merchand, User} = require("../models/sequelize");
 const bcrypt = require("bcryptjs");
 const {sendEmail} = require("../mailer/mail")
 
@@ -116,11 +116,7 @@ router
                     if (!user || !bcrypt.compareSync(password, user.password)) {
                         return res.status(400).json({'message': 'Information invalides'});
                     } else {
-                        let user = {
-                            id: user.id,
-                            roles: ['admin']
-                        }
-                        createJWT({user}).then((token) =>
+                        createJWT({id: user.id, roles: ['admin']}).then((token) =>
                             res.json({
                                 token: token,
                                 message: 'Connexion effectué'
@@ -129,35 +125,11 @@ router
                     }
                 })
                 .catch(err => {
-                    res.json({message: 'Une erreur est survenu'})
-                    res.status(500)
+                    console.log(err)
+                    res.status(500).json({message: 'Une erreur est survenu'});
                 })
         } else {
             res.status(400).json({'message': 'Formulaire incomplet'});
         }
-        User.findOne({
-            where: {
-                email: email
-            }
-        })
-            .then(user => {
-                if (!user) {
-                    bcrypt.hash(password, 10, (err, hash) => {
-                        userData.password = hash
-                        User.create(userData)
-                            .then(user => {
-                                res.json({status: user + 'REGISTERED'})
-                            })
-                            .catch(err => {
-                                res.send('ERROR: ' + err)
-                            })
-                    })
-                } else {
-                    res.json({error: "USER ALREADY EXISTS"})
-                }
-            })
-            .catch(err => {
-                res.send('ERROR: ' + err)
-            })
     })
 module.exports = router;

@@ -3,6 +3,7 @@ const cors = require("cors");
 
 const SecurityRouter = require("./routes/SecurityRouter");
 const AdminMerchandRouter = require("./routes/AdminMerchandRouter");
+const AdminViewRouter = require("./routes/AdminViewRouter");
 const TransactionRouter = require("./routes/TransactionRouter");
 const PaymentRouter = require("./routes/PaymentRouter");
 
@@ -24,9 +25,10 @@ app.use("/payment", PaymentRouter);
 app.use(verifyAuthorization());
 
 app.use("/api/admin", AdminMerchandRouter);
+app.use("/api/admin", AdminViewRouter);
 app.use("/api/transactions", TransactionRouter);
 
 
-const mongoose = require('./lib/mongo')
+// const mongoose = require('./lib/mongo')
 
 app.listen(process.env.PORT || 4000, () => console.log("server is listening"));

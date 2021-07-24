@@ -2,7 +2,6 @@ import React, {useEffect, useState} from 'react';
 import axios from "axios";
 import AdminChart from "./AdminChart";
 
-
 export default function Admin() {
 
     const Select = ({account}) => (
@@ -40,8 +39,11 @@ export default function Admin() {
 
 
     useEffect(() => {
+        const config = {
+            headers: { Authorization: `Bearer ${JSON.parse(localStorage.getItem('token'))}` }
+        };
         // GET request using axios inside useEffect React hook
-        axios.get(`http://localhost:4000/admin/dashboard/${merchand}`)
+        axios.get(`http://localhost:4000/api/admin/dashboard/${merchand}`, config)
             .then(res => {
                 console.log(res.data);
                 setAccount(res.data)

@@ -32,11 +32,10 @@ module.exports = function (options) {
                     .catch(() => res.sendStatus(401));
                 break;
             case "Bearer":
+                console.log(token)
                 verifJWT(token)
                     .then((user) => {
-                        // Load user from db
                         req.user = user;
-                        req.merchand = user.merchand;
                         next();
                     })
                     .catch(() => res.sendStatus(401));
