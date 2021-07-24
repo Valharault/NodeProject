@@ -20,7 +20,7 @@ app.use(express.json());
 app.use(cors());
 
 app.use("/api", SecurityRouter);
-app.use("/payment", PaymentRouter);
+app.use("/api/payment", PaymentRouter);
 
 app.use(verifyAuthorization());
 

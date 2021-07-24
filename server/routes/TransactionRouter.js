@@ -27,7 +27,7 @@ router
                 TransactionStatus.create({status: 'Pending', transactionId: transaction.id})
                     .then(transactionStatus =>
                         res.json({
-                            url: req.protocol + '://' + req.get('host') + "/payment/" + transaction.id
+                            url: req.protocol + '://' + req.get('host') + "/api/payment/" + transaction.id
                         })
                     ).catch(err => {
                     console.log(err)

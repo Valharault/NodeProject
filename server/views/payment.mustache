@@ -304,7 +304,7 @@
             </label>
         </div>
     </div>
-    <form action="/payment/{{transactionId}}" method="post">
+    <form action="/api/payment/{{transactionId}}" method="post">
         <div class="payment-input">
 
             <div class="form-group success">
@@ -354,7 +354,7 @@
             </div>
         </div>
         <div class="payment-actions">
-            <a class="return" href="/payment/{{transactionId}}/cancel">Annuler l'achat</a>
+            <a class="return" href="/api/payment/{{transactionId}}/cancel">Annuler l'achat</a>
             <a class="finish" href="javascript:void(0);">
                 <button type="submit">Valider le paiement</button>
             </a>

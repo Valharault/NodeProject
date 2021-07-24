@@ -9,16 +9,8 @@
   "author": "Mohand AIT AMARA",
   "license": "ISC",
   "dependencies": {
-    "bcrypt": "^5.0.1",
-    "bcryptjs": "^2.4.3",
-    "body-parser": "^1.19.0",
     "cors": "^2.8.5",
-    "crypto": "^1.0.1",
     "express": "^4.17.1",
-    "fs": "0.0.1-security",
-    "npm": "^7.20.1",
-    "path": "^0.12.7",
-    "pg": "^8.6.0",
-    "sequelize": "^6.6.5"
+    "npm": "^7.20.1"
   }
 }

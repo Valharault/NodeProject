@@ -1,6 +1,6 @@
 const {Router} = require("express");
 const {Transaction, TransactionStatus} = require("./../models/sequelize")
-
+const http = require('http');
 const router = Router();
 
 router
@@ -11,8 +11,14 @@ router
     })
 
     .post("/:id", (req, res) => {
-        console.log(req, res)
-        // CALL PSP ICI
+        http.get('http://localhost:5000/api/capture/' + req.params.id, function(res) {
+            res.on('data', function(d) {
+                process.stdout.write(d);
+            });
+
+        }).on('error', function(e) {
+            console.error(e);
+        });
         res.redirect('http://localhost:3000/paiement/success');
     })
     .get("/:id/cancel", (req, res) => {
@@ -25,11 +31,13 @@ router
             })
     })
     .put("/:id", (req, res) => {
+        console.log(req.params.id)
         Transaction.findByPk(req.params.id)
             .then(transaction => {
                 TransactionStatus.create({status: 'Successful', transactionId: transaction.id})
                     .then(transactionStatus =>
-                        res.json('')
+                        console.log("TRANSACTION SUCCESSFULL")
+                        // Faire call serveur marchand
                     )
             })
     })
