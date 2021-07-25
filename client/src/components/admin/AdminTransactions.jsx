@@ -1,5 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import axios from "axios";
+import { FaSearchPlus } from "react-icons/fa";
+import {Button} from "react-bootstrap";
+import {Link} from "react-router-dom";
 
 
 export default function AdminTransactions () {
@@ -7,6 +10,7 @@ export default function AdminTransactions () {
     const [option, setOption] = useState([])
     const [value, setValue] = useState('all');
     const [merchand, setMerchand] = useState(0);
+    const [search, setSearch] = useState('all');
 
     const handleChange = async function (event) {
 
@@ -15,6 +19,13 @@ export default function AdminTransactions () {
 
         setMerchand(id)
         setValue(event.target.value)
+
+    }
+
+    const handleClick = async function (event) {
+        let searchBar = document.getElementById('search-bar');
+
+        setSearch(searchBar.value);
 
     }
 
@@ -33,6 +44,18 @@ export default function AdminTransactions () {
         </div>
     );
 
+    const SearchBar = ({}) => (
+        <div className={"form-group col-4"}>
+            <div className="input-group rounded">
+                <input id={"search-bar"} type="search" className="form-control rounded" placeholder="Search" aria-label="Search"
+                       aria-describedby="search-addon"/>
+                <span className="input-group-text border-0" id="search-addon" style={{cursor: "pointer"}} onClick={handleClick}>
+                    <FaSearchPlus></FaSearchPlus>
+            </span>
+            </div>
+        </div>
+    )
+
     const SimpleList = ({ list }) => (
         <table className="table mt-5">
             <thead className="thead-light">
@@ -43,18 +66,20 @@ export default function AdminTransactions () {
                 <th scope="col">Prix</th>
                 <th scope="col">Statut</th>
                 <th scope="col">Marchand</th>
+                <th scope="col"></th>
             </tr>
             </thead>
             <tbody>
             {list.map(item => (
 
                 <tr key={item.id}>
-                    <td>{item.firstname} {item.lastname}<br></br>{item.email}</td>
+                    <td>{item.customer_firstname} {item.customer_lastname}<br></br>{item.email}</td>
                     <td>{item.createdAt}</td>
-                    <td>{item.shop.product} {item.shop.type} <br></br> {item.shop.couleur}</td>
-                    <td>{item.price}</td>
-                    <td>{item.state}</td>
+                    <td></td>
+                    <td>{item.total_price}</td>
+                    <td>{item.transactionsStatus[0].status}</td>
                     <td>{item.merchand.firstname} {item.merchand.lastname}<br></br>{item.merchand.email}</td>
+                    <td><Button><Link to={`/admin/transactions/${item.id}`} style={{color: '#fff'}}>Voir la transaction</Link></Button></td>
                 </tr>
 
             ))}
@@ -66,7 +91,7 @@ export default function AdminTransactions () {
 
     useEffect(() => {
         // GET request using axios inside useEffect React hook
-        axios.get(`http://localhost:4000/admin/transactions/${merchand}`)
+        axios.get(`http://localhost:4000/api/admin/transactions/${merchand}/${search}`)
             .then(res => {
                 const mylist = res.data[0]
                 console.log(res.data);
@@ -74,12 +99,15 @@ export default function AdminTransactions () {
                 setOption(res.data[1])
             })
 
-    }, [merchand]);
+    }, [merchand, search]);
 
 
     return <div className={"container"}>
-        <h1 className="mt-5">Liste des transactions</h1>
+        <h1 className="mt-5 mb-5">Liste des transactions</h1>
+        <div className={"row"}>
         <Select account={option}/>
+        <SearchBar></SearchBar>
+        </div>
         <SimpleList list={list} />
     </div>
 }
