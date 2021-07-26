@@ -1,5 +1,5 @@
 const {Router} = require("express");
-const {Transaction, TransactionStatus, Operation} = require("./../models/sequelize")
+const {Transaction, TransactionStatus, Operation, OperationStatus} = require("./../models/sequelize")
 const http = require('http');
 const router = Router();
 
@@ -11,14 +11,23 @@ router
     })
 
     .post("/:id", (req, res) => {
-        http.get('http://localhost:5000/api/capture/' + req.params.id, function (res) {
-            res.on('data', function (d) {
-                process.stdout.write(d);
-            });
-
-        }).on('error', function (e) {
-            console.error(e);
-        });
+        Transaction.findByPk(req.params.id).then(
+            transaction => {
+                Operation.create({
+                    amount: transaction.total_price,
+                    type: req.params.type,
+                    transactionId: transaction.id
+                }).then(operation => {
+                    http.get('http://localhost:5000/api/capture/' + operation.id, function (res) {
+                        res.on('data', function (d) {
+                            process.stdout.write(d);
+                        });
+                    }).on('error', function (e) {
+                        console.error(e);
+                    });
+                })
+            }
+        )
         res.redirect('http://localhost:3000/paiement/success');
     })
     .get("/:id/cancel", (req, res) => {
@@ -31,25 +40,19 @@ router
             })
     })
     .put("/:id/:type", (req, res) => {
-        Transaction.findByPk(req.params.id)
-            .then(transaction => {
-                TransactionStatus.create({status: 'Successful', transactionId: transaction.id})
+        Operation.findByPk(req.params.id)
+            .then(operation => {
+                OperationStatus.create({status: req.params.type, operationId: operation.id})
                     .then(transactionStatus =>
-                        Operation.create({
-                            amount: transaction.total_price,
-                            type: req.params.type,
-                            transactionId: transaction.id
+                        http.get('http://localhost:4500/notifications', function (res) {
+                            res.on('data', function (d) {
+                                process.stdout.write(d);
+                            });
+                        }).on('error', function (e) {
+                            console.error(e);
                         })
-                            .then(data => {
-                                http.get('http://localhost:4500/notifications', function (res) {
-                                    res.on('data', function (d) {
-                                        process.stdout.write(d);
-                                    });
-                                }).on('error', function (e) {
-                                    console.error(e);
-                                });
-                            })
                     )
+                TransactionStatus.create({status: 'Successful', transactionId: operation.transactionId})
             })
     })
 

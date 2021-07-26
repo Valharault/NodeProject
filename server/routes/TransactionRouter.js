@@ -30,11 +30,9 @@ router
                             url: req.protocol + '://' + req.get('host') + "/api/payment/" + transaction.id
                         })
                     ).catch(err => {
-                    console.log(err)
                     return res.status(500).json({'message': 'Une erreur est survenue'});
                 })
             }).catch(err => {
-            console.log(err)
             return res.status(500).json({'message': 'Une erreur est survenue'});
         })
     })
