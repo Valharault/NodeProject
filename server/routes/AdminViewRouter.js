@@ -1,7 +1,7 @@
 const {Sequelize} = require("sequelize");
 const {Op} = require("sequelize");
 const {Router} = require("express");
-const {User, Merchand, Transaction} = require("../models/sequelize");
+const {User, Merchand, Transaction, TransactionStatus, Operation, OperationStatus} = require("../models/sequelize");
 const router = Router();
 
 
@@ -61,7 +61,7 @@ router.get("/merchand/:id", (req, res) => {
         });
 
         const findAvgPriceTransaction = Transaction.findAll({
-            attributes: [[Sequelize.fn('AVG', Sequelize.col('price')), 'avgPrice']],
+            attributes: [[Sequelize.fn('AVG', Sequelize.col('total_price')), 'avgPrice']],
             where: [whereObjectMarchand],
         })
 
@@ -79,28 +79,54 @@ router.get("/merchand/:id", (req, res) => {
                 console.log(err);
             });
      })
-    .get('/transactions/:merchand', (req, res ) => {
+    .get('/transactions/:merchand/:search', (req, res ) => {
 
         let whereObjectMarchand = {};
-        const { merchand } = req.params;
+        let whereObjectSearch = {};
 
-        if(merchand !== '0'){
+        if(req.params.merchand !== '0'){
 
             whereObjectMarchand = {
-                'merchandId': merchand
+                'merchandId': req.params.merchand
             };
+        }
+
+
+        if(req.params.search !== 'all'){
+
+            whereObjectSearch =
+                {
+                    email: {
+                        [Op.like]: '%' + req.params.search + '%'
+                    },
+
+                }
         }
 
         const transactions = Transaction.findAll({
             where: [
-                whereObjectMarchand
+                whereObjectMarchand,
+                whereObjectSearch
             ]
 
             ,
             include: [{
                 model: Merchand,
                 as: 'merchand'
-            }],
+            },
+                {
+                    model: TransactionStatus,
+                    as: 'transactionsStatus',
+                }
+                ,
+                {
+                    model: Operation,
+                    as: 'Operations',
+                    include: [{model: OperationStatus,
+                            as: 'operationStatus'}]
+                }
+
+                ],
             paranoid: false,
         })
 

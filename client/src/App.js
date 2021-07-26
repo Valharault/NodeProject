@@ -11,6 +11,7 @@ import AdminValidAccount from "./components/admin/AdminValidAccount";
 import AdminShowAccount from "./components/admin/AdminShowAccount";
 import Admin from "./components/admin/Admin";
 import AdminTransactions from "./components/admin/AdminTransactions";
+import AdminTransactionsShow from "./components/admin/AdminTransactionsShow";
 
 export default function App() {
 
@@ -49,6 +50,10 @@ export default function App() {
                     <Route exact path="/admin/transactions">
                         <Header/>
                         <AdminTransactions/>
+                    </Route>
+                    <Route exact path="/admin/transactions/:id" >
+                        <HeaderAdmin/>
+                        <AdminTransactionsShow/>
                     </Route>
                     <Route exact path="/logout">
                         <Logout/>

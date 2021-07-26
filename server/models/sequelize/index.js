@@ -3,6 +3,8 @@ const Merchand = require("./Merchand");
 const Transaction = require("./Transaction");
 const TransactionStatus = require("./TransactionStatus");
 const Operation = require("./Operation");
+const OperationStatus = require("./OperationStatus");
+
 const denormalizeUser = (user) => {
     User.findByPk(user.id).then((data) => {
         const denormalizedUser = data.toJSON();
@@ -28,5 +30,6 @@ module.exports = {
     Merchand,
     Transaction,
     TransactionStatus,
-    Operation
+    Operation,
+    OperationStatus
 };

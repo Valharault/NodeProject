@@ -31,6 +31,6 @@ app.use("/api/merchand/transactions", MerchandTransactionRouter);
 app.use("/api/transactions", TransactionRouter);
 
 
-// const mongoose = require('./lib/mongo')
+
 
 app.listen(process.env.PORT || 4000, () => console.log("server is listening"));
