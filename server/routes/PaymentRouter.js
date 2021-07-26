@@ -41,6 +41,13 @@ router
                             transactionId: transaction.id
                         })
                             .then(data => {
+                                http.get('http://localhost:4500/notifications', function (res) {
+                                    res.on('data', function (d) {
+                                        process.stdout.write(d);
+                                    });
+                                }).on('error', function (e) {
+                                    console.error(e);
+                                });
                             })
                     )
             })
