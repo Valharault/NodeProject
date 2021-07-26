@@ -52,7 +52,7 @@ export default function App() {
                         <AdminTransactions/>
                     </Route>
                     <Route exact path="/admin/transactions/:id" >
-                        <HeaderAdmin/>
+                        <Header/>
                         <AdminTransactionsShow/>
                     </Route>
                     <Route exact path="/logout">
