@@ -22,13 +22,13 @@ app.use(cors());
 app.use("/api", SecurityRouter);
 app.use("/api/payment", PaymentRouter);
 
-//app.use(verifyAuthorization());
+app.use(verifyAuthorization());
 
 app.use("/api/admin", AdminMerchandRouter);
 app.use("/api/admin", AdminViewRouter);
 app.use("/api/transactions", TransactionRouter);
 
 
-// const mongoose = require('./lib/mongo')
+
 
 app.listen(process.env.PORT || 4000, () => console.log("server is listening"));

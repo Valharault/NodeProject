@@ -12,7 +12,7 @@ export default function DefaultNavbar() {
                     <Nav className="me-auto">
                         <Link to={"/connexion"} className="nav-link">Connexion</Link>
                         <Link to={"/inscription"} className="nav-link">Inscription</Link>
-                        <Link to={"/admin"} className="nav-link">Login Admin</Link>
+                        <Link to={"/admin/login"} className="nav-link">Login Admin</Link>
                     </Nav>
                 </Navbar.Collapse>
             </Container>
