@@ -8,7 +8,9 @@ export default function AdminTransactionsShow() {
 
     const { id } = useParams();
 
-    const [list, setList] = useState([])
+    const [transStatus, setTransStatus] = useState([])
+    const [operation, setOperation] = useState([])
+    const [operationStatus, setOperationStatus] = useState([])
 
     const ListStatus = ({ list }) => (
         <table className="table mt-5">
@@ -20,13 +22,11 @@ export default function AdminTransactionsShow() {
             </thead>
             <tbody>
             {list.map(item => (
-                item.transactionsStatus.map(status => (
                 <tr>
-                    <td>{status.status} </td>
-                    <td>{status.createdAt}</td>
+                    <td>{item.status} </td>
+                    <td>{item.createdAt}</td>
                 </tr>
-
-                ))))}
+                ))}
             </tbody>
         </table>
     );
@@ -42,14 +42,13 @@ export default function AdminTransactionsShow() {
             </thead>
             <tbody>
             {list.map(item => (
-                item.Operations.map(status => (
                     <tr>
-                        <td>{status.amount} </td>
-                        <td>{status.type} </td>
-                        <td>{status.createdAt}</td>
+                        <td>{item.amount} </td>
+                        <td>{item.type} </td>
+                        <td>{item.createdAt}</td>
                     </tr>
 
-                ))))}
+                ))}
             </tbody>
         </table>
     );
@@ -57,10 +56,11 @@ export default function AdminTransactionsShow() {
 
     useEffect(() => {
         // GET request using axios inside useEffect React hook
-        axios.get(`http://localhost:4000/api/admin/transactions/${id}/all`)
+        axios.get(`http://localhost:4000/api/admin/transaction/${id}`)
             .then(res => {
-                console.log(res.data)
-                setList(res.data[0])
+                setTransStatus(res.data[0])
+                setOperation(res.data[1])
+                setOperationStatus(res.data[2])
             })
 
     }, []);
@@ -70,11 +70,11 @@ export default function AdminTransactionsShow() {
         <div className={"row"}>
             <div className={"col-6"}>
                 Historique de statuts de transactions
-                <ListStatus list={list}></ListStatus>
+                <ListStatus list={transStatus}></ListStatus>
             </div>
             <div className={"col-6"}>
                 Historique des opérations
-                <ListOperations list={list}></ListOperations>
+                <ListOperations list={operation}></ListOperations>
             </div>
         </div>
     </div>

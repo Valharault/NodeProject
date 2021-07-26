@@ -11,6 +11,9 @@ export default function AdminTransactions () {
     const [value, setValue] = useState('all');
     const [merchand, setMerchand] = useState(0);
     const [search, setSearch] = useState('all');
+    const [countTransaction, setCountTransaction] = useState(0);
+    const [refundTransaction, setRefundTransaction] = useState(0);
+    const [avgItems, setAvgItems] = useState(0);
 
     const handleChange = async function (event) {
 
@@ -64,7 +67,6 @@ export default function AdminTransactions () {
                 <th scope="col">Date</th>
                 <th scope="col">Produit</th>
                 <th scope="col">Prix</th>
-                <th scope="col">Statut</th>
                 <th scope="col">Marchand</th>
                 <th scope="col"></th>
             </tr>
@@ -75,11 +77,10 @@ export default function AdminTransactions () {
                 <tr key={item.id}>
                     <td>{item.customer_firstname} {item.customer_lastname}<br></br>{item.email}</td>
                     <td>{item.createdAt}</td>
-                    <td></td>
+                    <td>{item.items.map(items => (<span>{items.name} / {items.unitPrice} / {items.quantity}<br></br></span>))}</td>
                     <td>{item.total_price}</td>
-                    <td>{item.transactionsStatus[0].status}</td>
-                    <td>{item.merchand.firstname} {item.merchand.lastname}<br></br>{item.merchand.email}</td>
-                    <td><Button><Link to={`/admin/transactions/${item.id}`} style={{color: '#fff'}}>Voir la transaction</Link></Button></td>
+                    <td>{item.merchand_firstname} {item.merchand_lastname}<br></br>{item.merchand_email}</td>
+                    <td><Button><Link to={`/admin/transactions/${item._id}`} style={{color: '#fff'}}>Voir la transaction</Link></Button></td>
                 </tr>
 
             ))}
@@ -97,13 +98,50 @@ export default function AdminTransactions () {
                 console.log(res.data);
                 setList(mylist);
                 setOption(res.data[1])
+                setCountTransaction(res.data[2]);
+                setRefundTransaction(res.data[3]);
+                setAvgItems(res.data[4]);
             })
 
     }, [merchand, search]);
 
 
+
     return <div className={"container"}>
         <h1 className="mt-5 mb-5">Liste des transactions</h1>
+        <div className={"row mb-5"}>
+            <div className={"col-4"}>
+                <div className={"box-value box-light-red"}>
+                        <span className={"box-title"}>
+                    Nombre de transactions
+                        </span>
+                    <span className={"box-data"}>
+                        {countTransaction}
+                </span>
+                </div>
+            </div>
+            <div className={"col-4"}>
+                <div className={"box-value box-light-blue"}>
+            <span className={"box-title"}>
+                Transactions annulées
+            </span>
+                    <span className={"box-data"}>
+                        {refundTransaction}
+            </span>
+                </div>
+            </div>
+            <div className={"col-4"}>
+                <div className={"box-value box-light-green"}>
+            <span className={"box-title"}>
+                Nombre d'articles moyen
+            </span>
+                    <span className={"box-data"}>
+                        {avgItems.length > 0  ? avgItems[0].average.toFixed(2) : 0}
+                    </span>
+                </div>
+
+            </div>
+        </div>
         <div className={"row"}>
         <Select account={option}/>
         <SearchBar></SearchBar>

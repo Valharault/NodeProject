@@ -2,6 +2,10 @@ const {Sequelize} = require("sequelize");
 const {Op} = require("sequelize");
 const {Router} = require("express");
 const {User, Merchand, Transaction, TransactionStatus, Operation, OperationStatus} = require("../models/sequelize");
+const Transactions = require("../models/mongo/MerchandTransaction");
+const TransactionsStatus = require("../models/mongo/TransactionStatus");
+const Operations = require("../models/mongo/Operation");
+const OperationsStatus = require("../models/mongo/OperationStatus");
 const router = Router();
 
 
@@ -69,6 +73,7 @@ router.get("/merchand/:id", (req, res) => {
             paranoid: false,
         })
 
+
         Promise
             .all([findNonActiveAccount, findActiveAccount, registrationByDates, findAllMerchand, findAllTransaction, findAvgPriceTransaction])
             .then(responses => {
@@ -82,66 +87,65 @@ router.get("/merchand/:id", (req, res) => {
     .get('/transactions/:merchand/:search', (req, res ) => {
 
         let whereObjectMarchand = {};
-        let whereObjectSearch = {};
 
-        if(req.params.merchand !== '0'){
+        if(req.params.merchand !== '0' && req.params.search !== 'all'){
 
             whereObjectMarchand = {
-                'merchandId': req.params.merchand
+                merchandId: req.params.merchand,
+                email: {$regex: req.params.search, $options: 'i'}
+            };
+        }
+        else if (req.params.merchand !== '0') {
+            whereObjectMarchand = {
+                merchandId: req.params.merchand
+            };
+        }
+        else if (req.params.search !== 'all') {
+            whereObjectMarchand = {
+                email: {$regex: req.params.search, $options: 'i'}
             };
         }
 
+        const transactions       = Transactions.find(whereObjectMarchand, function (err, docs) {});
+        const refundTransactions = TransactionsStatus.count({$and: [{status: "Cancelled"}, whereObjectMarchand]}, function (err, docs) {})
+        const countTransactions  = Transactions.count(whereObjectMarchand, function (err, docs) {})
+        const averageItems        = Transactions.aggregate([
+            { $match: whereObjectMarchand },
+            { $group: { _id: null , average: { $avg: '$nbItems' } } },
+        ])
 
-        if(req.params.search !== 'all'){
-
-            whereObjectSearch =
-                {
-                    email: {
-                        [Op.like]: '%' + req.params.search + '%'
-                    },
-
-                }
-        }
-
-        const transactions = Transaction.findAll({
-            where: [
-                whereObjectMarchand,
-                whereObjectSearch
-            ]
-
-            ,
-            include: [{
-                model: Merchand,
-                as: 'merchand'
-            },
-                {
-                    model: TransactionStatus,
-                    as: 'transactionsStatus',
-                }
-                ,
-                {
-                    model: Operation,
-                    as: 'Operations',
-                    include: [{model: OperationStatus,
-                            as: 'operationStatus'}]
-                }
-
-                ],
-            paranoid: false,
-        })
 
         const findAllMerchand = Merchand.findAll({
             paranoid: false,
         })
         Promise
-            .all([transactions, findAllMerchand])
+            .all([transactions, findAllMerchand, countTransactions, refundTransactions, averageItems])
             .then(responses => {
-                res.json([  responses[0],  responses[1]])
+                res.json([  responses[0],  responses[1], responses[2], responses[3], responses[4]])
             })
             .catch(err => {
                 console.log('**********ERROR RESULT****************');
                 console.log(err);
             });
+    })
+    .get('/transaction/:id', (req, res ) => {
+
+        const id = req.params.id;
+
+        const transactionStatus = TransactionsStatus.find({transactionId: id}, function (err, docs) {});
+        const operations = Operations.find({transactionId: id}, function (err, docs) {});
+        const operationsStatus = OperationsStatus.find({transactionId: id}, function (err, docs) {});
+
+        Promise
+            .all([transactionStatus, operations, operationsStatus])
+            .then(responses => {
+                res.json([  responses[0],  responses[1], responses[2]])
+            })
+            .catch(err => {
+                console.log('**********ERROR RESULT****************');
+                console.log(err);
+            });
+
     })
 
 

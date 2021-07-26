@@ -37,6 +37,7 @@ export default function Admin() {
     const [option, setOption] = useState([])
     const [merchand, setMerchand] = useState(0);
     const [value, setValue] = useState('all');
+    const [allAccounts, setAllAccounts] = useState(0);
 
 
     useEffect(() => {
@@ -50,6 +51,7 @@ export default function Admin() {
                 setAccount(res.data)
                 setOption(res.data[3])
                 setPrice(res.data[5])
+                setAllAccounts(res.data[0] + res.data[1]);
             })
 
     }, [merchand]);
@@ -61,11 +63,11 @@ export default function Admin() {
             <div className={"row"}>
                 <div className={"col-4"}>
                     <div className={"box-value box-light-red"}>
-            <span className={"box-title"}>
-                Nombre d'inscription
-            </span>
+                        <span className={"box-title"}>
+                    Nombre d'inscription
+                        </span>
                         <span className={"box-data"}>
-                    5
+                            {allAccounts}
                 </span>
                     </div>
                 </div>
@@ -85,7 +87,7 @@ export default function Admin() {
                 Panier moyen
             </span>
                         <span className={"box-data"}>
-                        {price[0].avgPrice}
+                            {price[0].avgPrice !== 0 ? (price[0].avgPrice) : '0'} €
                     </span>
                     </div>
 

@@ -3,6 +3,9 @@ const conn = require("../../lib/mongo");
 
 const MerchandTransactionSchema = new Schema({
     _id: String,
+    merchand_email: String,
+    merchand_firstname: String,
+    merchand_lastname: String,
     customer_firstname: String,
     customer_lastname: String,
     customer_shipping_address: String,
@@ -17,7 +20,9 @@ const MerchandTransactionSchema = new Schema({
     total_price: Number,
     currency: String,
     items: Array,
-    merchandId: Number
+    nbItems: Number,
+    merchandId: Number,
+    createdAt: Date,
 });
 
 const MerchandTransaction = conn.model("MerchandTransaction", MerchandTransactionSchema);

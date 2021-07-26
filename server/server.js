@@ -31,6 +31,4 @@ app.use("/api/merchand/transactions", MerchandTransactionRouter);
 app.use("/api/transactions", TransactionRouter);
 
 
-
-
 app.listen(process.env.PORT || 4000, () => console.log("server is listening"));
