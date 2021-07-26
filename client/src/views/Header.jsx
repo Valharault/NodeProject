@@ -20,11 +20,11 @@ export default class Header extends Component {
             return (
                 <DefaultNavbar/>
             );
-        } else if (currentUser.user.roles.includes('admin')) {
+        } else if (currentUser.roles.includes('admin')) {
             return (
                 <AdminNavbar/>
             );
-        } else if (currentUser.user.roles.includes('merchand')) {
+        } else if (currentUser.roles.includes('merchand')) {
             return (
                 <MerchandNavbar/>
             );

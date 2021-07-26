@@ -7,7 +7,7 @@ export default function AdminNavbar() {
     return (
         <Navbar bg="light" expand="lg">
             <Container>
-                <Navbar.Brand href="#home">Panel Admin</Navbar.Brand>
+                <Navbar.Brand href="#home">BackOffice</Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav"/>
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="me-auto">

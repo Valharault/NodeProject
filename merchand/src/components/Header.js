@@ -21,12 +21,11 @@ function Header() {
                     <Nav className="me-auto">
                         <Nav.Link as={Link} to="/boutique">Boutique</Nav.Link>
                         {!token && (
-                            <Nav.Link as={Link} to="/mon-compte">Identification</Nav.Link>
+                            <Nav.Link as={Link} to="/">Connexion</Nav.Link>
                         )}
                         {
                             token && (
                                 <NavDropdown title="Marchand" id="basic-nav-dropdown">
-                                    <NavDropdown.Item as={Link} to={"/mon-compte"}>Mon compte</NavDropdown.Item>
                                     <NavDropdown.Item as={Link} to={"/transactions"}>Mes transactions</NavDropdown.Item>
                                     <NavDropdown.Item onClick={Logout}>Déconnexion</NavDropdown.Item>
                                 </NavDropdown>

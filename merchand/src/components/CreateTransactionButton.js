@@ -3,35 +3,35 @@ import {ListContext} from "../contexts/ListContext";
 import {Button} from "react-bootstrap";
 import {CredentialContext} from "../contexts/CredentialContext";
 
-export default function CreateTransactionButton() {
+export default function CreateTransactionButton({values}) {
     const {list, totalPrice} = useContext(ListContext);
     const {token} = useContext(CredentialContext);
 
     const createTransaction = () => {
         const data = {
             consumer: {
-                lastname: "Foo",
-                firstname: "Bart",
-                email: "test@gmail.com"
+                lastname: values.lastname,
+                firstname: values.firstname,
+                email: values.email
             },
             billingAddress: {
-                address: "1 rue Bouvier",
-                zipCode: "75011",
-                city: "Paris",
-                country: "France",
+                address: values.billingAddress,
+                zipCode: values.billingZipcode,
+                city: values.billingCity,
+                country: values.billingCountry,
             },
             cart: list,
             totalPrice,
-            currency: "EUR",
+            currency: values.device,
             shippingAddress: {
-                address: "1 rue Bouvier",
-                zipCode: "75011",
-                city: "Paris",
-                country: "France",
+                address: values.shippingAddress,
+                zipCode: values.shippingZipcode,
+                city: values.shippingCity,
+                country: values.shippingCountry,
             },
         };
-
-        fetch("http://localhost:4000/api/transactions/de", {
+        console.log(values)
+        fetch("http://localhost:4000/api/transactions/", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

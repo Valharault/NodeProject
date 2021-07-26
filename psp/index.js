@@ -8,9 +8,10 @@ app.use(express.urlencoded());
 app.use(express.json());
 app.use(cors());
 
-app.get("/api/capture/:id", (req, res) => {
+app.get("/api/:type/:id", (req, res) => {
     console.log("Je recois la transaction: " + req.params.id)
     const id = req.params.id;
+    const type = req.params.type;
     res.status(202);
     res.send();
     console.log("Je renvoie une 202 en attendant de traiter")
@@ -19,7 +20,7 @@ app.get("/api/capture/:id", (req, res) => {
         var options = {
             host: 'localhost',
             port: 4000,
-            path: '/api/payment/' + id,
+            path: '/api/payment/' + id + "/" + type,
             method: 'PUT'
         };
 

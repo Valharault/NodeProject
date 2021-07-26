@@ -4,7 +4,7 @@ const {Transaction, TransactionStatus} = require("../models/sequelize");
 const router = Router();
 
 router
-    .post("/de", (req, res) => {
+    .post("/", (req, res) => {
         const transactionData = {
             customer_firstname: req.body.consumer.firstname,
             customer_lastname: req.body.consumer.lastname,
@@ -26,7 +26,7 @@ router
             .then(transaction => {
                 TransactionStatus.create({status: 'Pending', transactionId: transaction.id})
                     .then(transactionStatus =>
-                        res.json({
+                        res.status(201).json({
                             url: req.protocol + '://' + req.get('host') + "/api/payment/" + transaction.id
                         })
                     ).catch(err => {
@@ -34,8 +34,8 @@ router
                     return res.status(500).json({'message': 'Une erreur est survenue'});
                 })
             }).catch(err => {
+            console.log(err)
             return res.status(500).json({'message': 'Une erreur est survenue'});
         })
     })
-
 module.exports = router;

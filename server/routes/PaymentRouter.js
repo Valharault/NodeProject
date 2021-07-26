@@ -1,5 +1,5 @@
 const {Router} = require("express");
-const {Transaction, TransactionStatus} = require("./../models/sequelize")
+const {Transaction, TransactionStatus, Operation} = require("./../models/sequelize")
 const http = require('http');
 const router = Router();
 
@@ -11,12 +11,12 @@ router
     })
 
     .post("/:id", (req, res) => {
-        http.get('http://localhost:5000/api/capture/' + req.params.id, function(res) {
-            res.on('data', function(d) {
+        http.get('http://localhost:5000/api/capture/' + req.params.id, function (res) {
+            res.on('data', function (d) {
                 process.stdout.write(d);
             });
 
-        }).on('error', function(e) {
+        }).on('error', function (e) {
             console.error(e);
         });
         res.redirect('http://localhost:3000/paiement/success');
@@ -30,14 +30,18 @@ router
                     )
             })
     })
-    .put("/:id", (req, res) => {
-        console.log(req.params.id)
+    .put("/:id/:type", (req, res) => {
         Transaction.findByPk(req.params.id)
             .then(transaction => {
                 TransactionStatus.create({status: 'Successful', transactionId: transaction.id})
                     .then(transactionStatus =>
-                        console.log("TRANSACTION SUCCESSFULL")
-                        // Faire call serveur marchand
+                        Operation.create({
+                            amount: transaction.total_price,
+                            type: req.params.type,
+                            transactionId: transaction.id
+                        })
+                            .then(data => {
+                            })
                     )
             })
     })

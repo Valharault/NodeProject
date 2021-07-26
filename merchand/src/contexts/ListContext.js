@@ -7,8 +7,8 @@ import {
 } from "react";
 
 const data = [
-    {id: 1, name: "forks", unitPrice: 1, quantity: 2},
-    {id: 2, name: "knifes", unitPrice: 2, quantity: 2},
+    {id: 1, name: "Patate", unitPrice: 1, quantity: 2},
+    {id: 2, name: "Carotte", unitPrice: 2, quantity: 2},
 ];
 
 export const ListContext = createContext();
