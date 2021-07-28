@@ -50,6 +50,7 @@ class AuthService {
             return null;
         }
         let token = JSON.parse(localStorage.getItem('token'));
+        console.log(jwt_decode(token))
         return jwt_decode(token);
     }
 }
