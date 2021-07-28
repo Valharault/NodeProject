@@ -56,7 +56,7 @@ router.get("/merchand/:id", (req, res) => {
                       whereObject]// since count is applied on Product model and distinct is directly passed to its object so Product.id will be selected
               })
 
-              const registrationByDates = Merchand.findAll({
+              const registrationByDates = Transaction.findAll({
                   attributes: [[Sequelize.fn('date_trunc', 'day', Sequelize.col('createdAt')), 'createDate'], [Sequelize.fn('COUNT', Sequelize.col('id')), 'registerCount']],
                   order: [
                       [[Sequelize.literal('"createDate"'), 'ASC']]
@@ -83,7 +83,11 @@ router.get("/merchand/:id", (req, res) => {
               Promise
                   .all([findNonActiveAccount, findActiveAccount, registrationByDates, findAllMerchand, findAllTransaction, findAvgPriceTransaction])
                   .then(responses => {
-                      res.json([responses[0], responses[1], responses[2], responses[3], responses[4], responses[5]])
+                      let price = 0;
+                      if (responses[5][0].dataValues.avgPrice !== null) {
+                          price = responses[5][0].dataValues.avgPrice
+                      }
+                      res.json([responses[0], responses[1], responses[2], responses[3], responses[4], price])
                   })
                   .catch(err => {
                       console.log('**********ERROR RESULT****************');
@@ -125,14 +129,20 @@ router.get("/merchand/:id", (req, res) => {
                 {$group: {_id: null, average: {$avg: '$nbItems'}}},
             ])
 
+            const successfullTransaction = OperationsStatus.count({$and: [{status: "capture"}, whereObjectMarchand]}, function (err, docs) {
+            });
+
+            const refundOperation = OperationsStatus.count({$and: [{status: "refund"}, whereObjectMarchand]}, function (err, docs) {
+            });
+
 
             const findAllMerchand = Merchand.findAll({
                 paranoid: false,
             })
             Promise
-                .all([transactions, findAllMerchand, countTransactions, refundTransactions, averageItems])
+                .all([transactions, findAllMerchand, countTransactions, refundTransactions, averageItems, successfullTransaction, refundOperation])
                 .then(responses => {
-                    res.json([responses[0], responses[1], responses[2], responses[3], responses[4]])
+                    res.json([responses[0], responses[1], responses[2], responses[3], responses[4], responses[5], responses[6]])
                 })
                 .catch(err => {
                     console.log('**********ERROR RESULT****************');
@@ -152,11 +162,16 @@ router.get("/merchand/:id", (req, res) => {
             });
             const operationsStatus = OperationsStatus.find({transactionId: id}, function (err, docs) {
             });
+            const countOperation = Operations.count({transactionId: id}, function (err, docs) {
+            });
+            const nbItems = Transactions.find({_id: id}).select('nbItems');
+            const price = Transactions.find({_id: id}).select('total_price');
+
 
             Promise
-                .all([transactionStatus, operations, operationsStatus])
+                .all([transactionStatus, operations, operationsStatus, countOperation, nbItems, price])
                 .then(responses => {
-                    res.json([responses[0], responses[1], responses[2]])
+                    res.json([responses[0], responses[1], responses[2], responses[3], responses[4], responses[5]])
                 })
                 .catch(err => {
                     console.log('**********ERROR RESULT****************');

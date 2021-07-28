@@ -87,7 +87,7 @@ export default function Admin() {
                 Panier moyen
             </span>
                         <span className={"box-data"}>
-                            {price[0].avgPrice !== 0 ? (price[0].avgPrice) : '0'} €
+                            {price != 0 ? price.toFixed(2) : price} €
                     </span>
                     </div>
 
