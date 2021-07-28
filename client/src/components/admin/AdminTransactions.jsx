@@ -91,8 +91,11 @@ export default function AdminTransactions () {
     const [list, setList] = useState([])
 
     useEffect(() => {
+        const config = {
+            headers: { Authorization: `Bearer ${JSON.parse(localStorage.getItem('token'))}` }
+        };
         // GET request using axios inside useEffect React hook
-        axios.get(`http://localhost:4000/api/admin/transactions/${merchand}/${search}`)
+        axios.get(`http://localhost:4000/api/admin/transactions/${merchand}/${search}`, config)
             .then(res => {
                 const mylist = res.data[0]
                 console.log(res.data);

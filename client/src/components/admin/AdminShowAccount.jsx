@@ -31,9 +31,13 @@ export default function AdminShowAccount() {
 
 
     useEffect(() => {
+        const config = {
+            headers: { Authorization: `Bearer ${JSON.parse(localStorage.getItem('token'))}` }
+        };
         // GET request using axios inside useEffect React hook
-        axios.get(`http://localhost:4000/admin/merchand/${id}`)
+        axios.get(`http://localhost:4000/api/admin/merchand/${id}`, config)
             .then(res => {
+                console.log(res.data)
                 setData(res.data);
             })
 
