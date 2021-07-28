@@ -48,9 +48,12 @@ export default function AdminValidAccount () {
     const [message, setMessage] = useState('');
 
     const handleClick = async function (event) {
+        const config = {
+            headers: { Authorization: `Bearer ${JSON.parse(localStorage.getItem('token'))}` }
+        };
         const value = event.target.value
         event.preventDefault()
-        axios.post(`http://localhost:4000/api/admin/credentials`, {'email': value})
+        axios.post(`http://localhost:4000/api/admin/credentials`, {'email': value}, config)
             .then(res => {
                 if (res.data[1] !== 500) {
                     setList(res.data[1])
@@ -72,8 +75,11 @@ export default function AdminValidAccount () {
     }
 
     useEffect(() => {
+        const config = {
+            headers: { Authorization: `Bearer ${JSON.parse(localStorage.getItem('token'))}` }
+        };
         // GET request using axios inside useEffect React hook
-        axios.get('http://localhost:4000/api/admin/merchand/valid')
+        axios.get('http://localhost:4000/api/admin/merchand/valid', config)
             .then(res => {
                 const mylist = res.data
                 console.log(res.data);

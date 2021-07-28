@@ -25,6 +25,7 @@ export default function AdminLoginForm() {
                 setMessage(response.message)
                 setSuccessful(true)
                 history.push("/admin")
+                window.location.reload()
             })
             .catch(function (error) {
                 if (error.response) {

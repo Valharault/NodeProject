@@ -11,7 +11,9 @@ export default function AdminNavbar() {
                 <Navbar.Toggle aria-controls="basic-navbar-nav"/>
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="me-auto">
-                        <Link to={"/admin/account"} className="nav-link">Admin account</Link>
+                        <Link to={"/admin"} className="nav-link">Dashboard</Link>
+                        <Link to={"/admin/transactions"} className="nav-link">Transactions</Link>
+                        <Link to={"/admin/account"} className="nav-link">Marchands</Link>
                         <Link to={"/logout"} className="nav-link">Déconnexion</Link>
                     </Nav>
                 </Navbar.Collapse>
