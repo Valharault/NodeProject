@@ -1,8 +1,8 @@
-const {createJWT} = require("../lib/security");
-const {Router} = require("express");
-const {Merchand, User} = require("../models/sequelize");
+const { createJWT } = require("../lib/security");
+const { Router } = require("express");
+const { Merchand, User } = require("../models/sequelize");
 const bcrypt = require("bcryptjs");
-const {sendEmail} = require("../mailer/mail")
+const { sendEmail } = require("../mailer/mail")
 
 const router = Router();
 
@@ -21,10 +21,10 @@ router
             password: req.body.values.password
         }
         Merchand.findOne({
-            where: {
-                email: merchandData.email
-            }
-        })
+                where: {
+                    email: merchandData.email
+                }
+            })
             .then(merchand => {
                 if (!merchand) {
                     const salt = bcrypt.genSaltSync(10);
@@ -41,29 +41,29 @@ router
 
                         })
                         .catch(err => {
-                            return res.status(500).json({'message': 'Une erreur est survenue'});
+                            return res.status(500).json({ 'message': 'Une erreur est survenue ' + err });
                         })
                 } else {
-                    return res.status(400).json({'message': 'Le marchand existe déjà'});
+                    return res.status(400).json({ 'message': 'Le marchand existe déjà' });
                 }
             })
             .catch(err => {
-                return res.status(500).json({'message': 'Une erreur est survenue'});
+                return res.status(500).json({ 'message': 'Une erreur est survenue' + err });
             })
     })
     .post("/login", (req, res) => {
-        const {email, password} = req.body;
+        const { email, password } = req.body;
         if (email !== "" && password !== "") {
             Merchand.findOne({
-                where: {
-                    email: email
-                }
-            })
+                    where: {
+                        email: email
+                    }
+                })
                 .then(merchand => {
                     if (!merchand || !bcrypt.compareSync(password, merchand.password)) {
-                        return res.status(400).json({'message': 'Information invalides'});
+                        return res.status(400).json({ 'message': 'Information invalides' });
                     } else {
-                        createJWT({id: merchand.id, roles: ['merchand']}).then((token) =>
+                        createJWT({ id: merchand.id, roles: ['merchand'] }).then((token) =>
                             res.json({
                                 token: token,
                                 message: 'Connexion effectué'
@@ -72,17 +72,17 @@ router
                     }
                 })
                 .catch(err => {
-                    res.json({message: 'Une erreur est survenu'})
+                    res.json({ message: 'Une erreur est survenu' })
                     res.status(500)
                 })
         } else {
-            res.status(400).json({'message': 'Formulaire incomplet'});
+            res.status(400).json({ 'message': 'Formulaire incomplet' });
         }
     })
     .post("/merchand-credential", (req, res) => {
-        const {clientId, clientSecret} = req.body;
+        const { clientId, clientSecret } = req.body;
         if (clientId !== "" && clientSecret !== "") {
-            Merchand.findOne({where: {client_id: clientId, client_secret: clientSecret}})
+            Merchand.findOne({ where: { client_id: clientId, client_secret: clientSecret } })
                 .then(merchand => {
                     if (merchand !== null) {
                         res.json({
@@ -90,29 +90,29 @@ router
                             successfull: true
                         })
                     } else {
-                        res.status(500).res.json({message: 'Clé incorrect'})
+                        res.status(500).res.json({ message: 'Clé incorrect' })
                     }
                 })
                 .catch(err => {
-                    res.status(500).json({message: 'Une erreur est survenu'})
+                    res.status(500).json({ message: 'Une erreur est survenu' })
                 })
         } else {
-            res.status(400).json({'message': 'Formulaire incomplet'});
+            res.status(400).json({ 'message': 'Formulaire incomplet' });
         }
     })
     .post("/admin/login", (req, res) => {
-        const {email, password} = req.body;
+        const { email, password } = req.body;
         if (email !== "" && password !== "") {
             User.findOne({
-                where: {
-                    email: email
-                }
-            })
+                    where: {
+                        email: email
+                    }
+                })
                 .then(user => {
                     if (!user || !bcrypt.compareSync(password, user.password)) {
-                        return res.status(400).json({'message': 'Information invalides'});
+                        return res.status(400).json({ 'message': 'Information invalides' });
                     } else {
-                        createJWT({id: user.id, roles: ['admin']}).then((token) =>
+                        createJWT({ id: user.id, roles: ['admin'] }).then((token) =>
                             res.json({
                                 token: token,
                                 message: 'Connexion effectué'
@@ -122,10 +122,10 @@ router
                 })
                 .catch(err => {
                     console.log(err)
-                    res.status(500).json({message: 'Une erreur est survenu'});
+                    res.status(500).json({ message: 'Une erreur est survenu' });
                 })
         } else {
-            res.status(400).json({'message': 'Formulaire incomplet'});
+            res.status(400).json({ 'message': 'Formulaire incomplet' });
         }
     })
 module.exports = router;
