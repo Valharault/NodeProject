@@ -12,6 +12,9 @@ import AdminShowAccount from "./components/admin/AdminShowAccount";
 import Admin from "./components/admin/Admin";
 import AdminTransactions from "./components/admin/AdminTransactions";
 import AdminTransactionsShow from "./components/admin/AdminTransactionsShow";
+import MerchandTransactions from './components/merchand/MerchandTransactions';
+import MerchandTransactionsShow from './components/merchand/MerchandTransactionsShow';
+import MerchandShowAccount from './components/merchand/MerchandShowAccount';
 
 export default function App() {
 
@@ -22,6 +25,14 @@ export default function App() {
                     <Route exact path='/'>
                         <Header/>
                         <Body/>
+                    </Route>
+                    <Route exact path='/merchand/transactions'>
+                        <Header/>
+                        <MerchandTransactions />
+                    </Route>
+                    <Route exact path='/merchand/account'>
+                        <Header/>
+                        <MerchandShowAccount />
                     </Route>
                     <Route exact path="/connexion">
                         <Header/>
