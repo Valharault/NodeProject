@@ -1,6 +1,6 @@
 const verifJWT = require("../lib/security").verifJWT;
 const verifBasic = require("../lib/security").verifBasic;
-const {Merchand} = require("../models/sequelize");
+const {Merchand, User} = require("../models/sequelize");
 
 module.exports = function (options) {
     return function verifyAuthorization(req, res, next) {
@@ -32,11 +32,19 @@ module.exports = function (options) {
                     .catch(() => res.sendStatus(401));
                 break;
             case "Bearer":
-                console.log(token)
                 verifJWT(token)
                     .then((user) => {
-                        req.user = user;
-                        next();
+                        if (user.roles.includes('admin')) {
+                            User.findByPk(user.id).then((user) => {
+                                req.user = user
+                                next();
+                            })
+                        } else if (user.roles.includes('merchand')) {
+                            Merchand.findByPk(user.id).then((merchand) => {
+                                req.merchand = merchand
+                                next();
+                            })
+                        }
                     })
                     .catch(() => res.sendStatus(401));
                 break;
