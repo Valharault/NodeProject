@@ -4,6 +4,7 @@ const cors = require("cors");
 const SecurityRouter = require("./routes/SecurityRouter");
 const AdminMerchandRouter = require("./routes/AdminMerchandRouter");
 const AdminViewRouter = require("./routes/AdminViewRouter");
+const MerchandViewRouter = require("./routes/MerchandViewRouter");
 const TransactionRouter = require("./routes/TransactionRouter");
 const MerchandTransactionRouter = require("./routes/MerchandTransactionRouter");
 const PaymentRouter = require("./routes/PaymentRouter");
@@ -29,6 +30,9 @@ app.use("/api/admin", AdminMerchandRouter);
 app.use("/api/admin", AdminViewRouter);
 app.use("/api/merchand/transactions", MerchandTransactionRouter);
 app.use("/api/transactions", TransactionRouter);
+
+app.use("/api/profile", MerchandViewRouter);
+
 
 
 app.listen(process.env.PORT || 4000, () => console.log("server is listening"));

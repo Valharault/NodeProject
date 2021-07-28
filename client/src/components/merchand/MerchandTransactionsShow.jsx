@@ -59,7 +59,7 @@ export default function AdminTransactionsShow() {
             headers: { Authorization: `Bearer ${JSON.parse(localStorage.getItem('token'))}` }
         };
         // GET request using axios inside useEffect React hook
-        axios.get(`http://localhost:4000/api/admin/transaction/${id}`, config)
+        axios.get(`http://localhost:4000/api/transaction/${id}`, config)
             .then(res => {
                 setTransStatus(res.data[0])
                 setOperation(res.data[1])

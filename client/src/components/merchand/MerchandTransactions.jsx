@@ -3,6 +3,7 @@ import axios from "axios";
 import { FaSearchPlus } from "react-icons/fa";
 import {Button} from "react-bootstrap";
 import {Link} from "react-router-dom";
+import MerchandChart from "./MerchandChart";
 
 
 export default function MerchandTransactions () {
@@ -14,6 +15,8 @@ export default function MerchandTransactions () {
     const [countTransaction, setCountTransaction] = useState(0);
     const [refundTransaction, setRefundTransaction] = useState(0);
     const [avgItems, setAvgItems] = useState(0);
+    const [list, setList] = useState([])
+
 
     const handleChange = async function (event) {
 
@@ -59,6 +62,29 @@ export default function MerchandTransactions () {
         </div>
     )
 
+
+    useEffect(() => {
+        const config = {
+            headers: { Authorization: `Bearer ${JSON.parse(localStorage.getItem('token'))}` }
+        };
+        // GET request using axios inside useEffect React hook
+        axios.get(`http://localhost:4000/api/merchand/transactions`, config)
+            .then(res => {
+                const mylist = res.data[0]
+                console.log(res.data);
+                console.log('coucou',list)
+                if(res.data.length > 0){
+                    setList(mylist);
+                    setOption(res.data[1]);
+                    setCountTransaction(res.data[2]);
+                    setRefundTransaction(res.data[3]);
+                    setAvgItems(res.data[4]);
+                }
+
+            })
+
+    });
+
     const SimpleList = ({ list }) => (
         <table className="table mt-5">
             <thead className="thead-light">
@@ -88,25 +114,7 @@ export default function MerchandTransactions () {
         </table>
     );
 
-    const [list, setList] = useState([])
 
-    useEffect(() => {
-        const config = {
-            headers: { Authorization: `Bearer ${JSON.parse(localStorage.getItem('token'))}` }
-        };
-        // GET request using axios inside useEffect React hook
-        axios.get(`http://localhost:4000/api/merchand/transactions`, config)
-            .then(res => {
-                const mylist = res.data[0]
-                console.log(res.data);
-                setList(mylist);
-                setOption(res.data[1])
-                setCountTransaction(res.data[2]);
-                setRefundTransaction(res.data[3]);
-                setAvgItems(res.data[4]);
-            })
-
-    }, [merchand, search]);
 
 
 
@@ -139,13 +147,24 @@ export default function MerchandTransactions () {
                 Nombre d'articles moyen
             </span>
                     <span className={"box-data"}>
-                        {avgItems.length > 0  ? avgItems[0].average.toFixed(2) : 0}
+                       
+                        {( avgItems && avgItems.length > 0)  ? avgItems[0].average.toFixed(2) : 0}
+
                     </span>
                 </div>
 
             </div>
         </div>
+        { SimpleList &&
+               <>
 
-        <SimpleList list={list} />
+                < SimpleList list={list} />
+
+                <MerchandChart value={list}/>
+                </>
+
+
+        }
+
     </div>
 }

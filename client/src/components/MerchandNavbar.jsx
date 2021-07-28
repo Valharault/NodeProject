@@ -11,7 +11,8 @@ export default function MerchandNavbar() {
                 <Navbar.Toggle aria-controls="basic-navbar-nav"/>
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="me-auto">
-                        <Link to={"/admin/account"} className="nav-link">Mon compte</Link>
+                        <Link to={"/merchand/account"} className="nav-link">Mon compte</Link>
+                        <Link to={"/merchand/transactions"} className="nav-link">Mes transactions</Link>
                         <Link to={"/logout"} className="nav-link">Déconnexion</Link>
                     </Nav>
                 </Navbar.Collapse>

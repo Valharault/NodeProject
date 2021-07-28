@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import {useParams} from "react-router-dom";
 import axios from "axios";
+import MerchandChart from "./MerchandChart";
 
 export default function MerchandShowAccount() {
 
-    const { id } = useParams();
 
     const [data, setData] = useState([])
 
@@ -34,8 +34,9 @@ export default function MerchandShowAccount() {
         const config = {
             headers: { Authorization: `Bearer ${JSON.parse(localStorage.getItem('token'))}` }
         };
+        console.log()
         // GET request using axios inside useEffect React hook
-        axios.get(`http://localhost:4000/api/merchand/`, config)
+        axios.get(`http://localhost:4000/profile`, config)
             .then(res => {
                 console.log(res.data)
                 setData(res.data);
@@ -44,6 +45,10 @@ export default function MerchandShowAccount() {
     }, []);
 
     return (
-            <InfoList data={data} />
+        <>
+            <InfoList data={data} /> 
+            
+            <MerchandChart value={data}/>
+        </>
     );
 }
