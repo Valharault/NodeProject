@@ -1,5 +1,6 @@
 const fetch = require('node-fetch');
 const fs = require('fs');
+// import axios from "axios";
 
 const euroArray = [];
 
@@ -39,6 +40,9 @@ async function getData(date) {
         if (err) {
             return console.log(err);
         }
+        // axios.post("http://localhost:4000/currency", { values }).then(response => {
+        //     return response.data;
+        // });
         console.log('The file was saved!');
     });
     return console.log(`data save for ${date}`);
