@@ -2,10 +2,14 @@ import React, {useState} from 'react';
 import {Button} from "react-bootstrap";
 import AuthService from "./../../../services/auth.service";
 import {useForm} from "react-hook-form";
+import {useHistory} from "react-router-dom";
 
 export default function LoginForm() {
     const [message, setMessage] = useState(null)
     const [successful, setSuccessful] = useState(false)
+
+    const history = useHistory();
+
 
     const {
         register,
@@ -22,6 +26,7 @@ export default function LoginForm() {
             response => {
                 setMessage(response.message)
                 setSuccessful(true)
+                history.push("/merchand/account")
                 window.location.reload()
             })
             .catch(function (error) {

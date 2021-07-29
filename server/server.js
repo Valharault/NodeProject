@@ -7,6 +7,7 @@ const AdminViewRouter = require("./routes/AdminViewRouter");
 const TransactionRouter = require("./routes/TransactionRouter");
 const MerchandTransactionRouter = require("./routes/MerchandTransactionRouter");
 const PaymentRouter = require("./routes/PaymentRouter");
+const MerchandRouter = require("./routes/MerchandRouter");
 
 const verifyAuthorization = require("./middlewares/verifyAuthorization");
 const mustacheExpress = require("mustache-express");
@@ -25,6 +26,7 @@ app.use("/api/payment", PaymentRouter);
 
 app.use(verifyAuthorization());
 
+app.use("/api/merchand", MerchandRouter);
 app.use("/api/admin", AdminMerchandRouter);
 app.use("/api/admin", AdminViewRouter);
 app.use("/api/merchand/transactions", MerchandTransactionRouter);

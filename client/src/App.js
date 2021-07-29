@@ -12,6 +12,7 @@ import AdminShowAccount from "./components/admin/AdminShowAccount";
 import Admin from "./components/admin/Admin";
 import AdminTransactions from "./components/admin/AdminTransactions";
 import AdminTransactionsShow from "./components/admin/AdminTransactionsShow";
+import MerchandAccount from "./components/merchand/MerchandAccount";
 
 export default function App() {
 
@@ -30,6 +31,10 @@ export default function App() {
                     <Route exact path="/inscription">
                         <Header/>
                         <RegisterForm/>
+                    </Route>
+                    <Route exact path="/merchand/account">
+                        <Header/>
+                        <MerchandAccount/>
                     </Route>
                     <Route exact path="/admin/login">
                         <Header/>

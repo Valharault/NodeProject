@@ -52,7 +52,11 @@ router
                             console.error(e);
                         })
                     )
-                TransactionStatus.create({status: 'Successful', transactionId: operation.transactionId})
+                if (req.params.type === "capture") {
+                    TransactionStatus.create({status: 'Successful', transactionId: operation.transactionId})
+                } else {
+                    TransactionStatus.create({status: 'Refund', transactionId: operation.transactionId})
+                }
             })
     })
 

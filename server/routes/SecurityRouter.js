@@ -63,6 +63,9 @@ router
                     if (!merchand || !bcrypt.compareSync(password, merchand.password)) {
                         return res.status(400).json({'message': 'Information invalides'});
                     } else {
+                        if (merchand.client_id === null && merchand.client_secret === null){
+                            return res.status(400).json({'message': 'Vous n\'etes pas encore vérifié'});
+                        }
                         createJWT({id: merchand.id, roles: ['merchand']}).then((token) =>
                             res.json({
                                 token: token,
