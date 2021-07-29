@@ -2,7 +2,6 @@ const express = require("express");
 const cors = require("cors");
 
 const SecurityRouter = require("./routes/SecurityRouter");
-const CurrencyRouter = require("./routes/CurrencyRouter");
 const AdminMerchandRouter = require("./routes/AdminMerchandRouter");
 const AdminViewRouter = require("./routes/AdminViewRouter");
 const TransactionRouter = require("./routes/TransactionRouter");
@@ -23,7 +22,6 @@ app.use(cors());
 
 app.use("/api", SecurityRouter);
 app.use("/api/payment", PaymentRouter);
-app.use("/currency", CurrencyRouter)
 
 app.use(verifyAuthorization());
 
