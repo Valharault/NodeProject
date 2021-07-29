@@ -30,8 +30,6 @@ export default function AdminChart(props) {
 
     const dataLineChart = props.value[2]
 
-
-
         return (
             <div className={"container row"}>
                 <div className={"col-6"}>
@@ -66,7 +64,7 @@ export default function AdminChart(props) {
                             type="monotone"
                             dataKey="registerCount"
                             stroke="#8884d8"
-                            name="Nombre d'inscriptions par date"
+                            name="Nombre de transactions par date"
                             activeDot={{ r: 8 }}
                         />
                     </LineChart>

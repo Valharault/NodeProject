@@ -12,6 +12,8 @@ export default function AdminTransactions () {
     const [merchand, setMerchand] = useState(0);
     const [search, setSearch] = useState('all');
     const [countTransaction, setCountTransaction] = useState(0);
+    const [cancellTransaction, setCancelTransaction] = useState(0);
+    const [successTransaction, setSuccessTransaction] = useState(0);
     const [refundTransaction, setRefundTransaction] = useState(0);
     const [avgItems, setAvgItems] = useState(0);
 
@@ -26,6 +28,7 @@ export default function AdminTransactions () {
     }
 
     const handleClick = async function (event) {
+        event.preventDefault();
         let searchBar = document.getElementById('search-bar');
 
         setSearch(searchBar.value);
@@ -98,12 +101,13 @@ export default function AdminTransactions () {
         axios.get(`http://localhost:4000/api/admin/transactions/${merchand}/${search}`, config)
             .then(res => {
                 const mylist = res.data[0]
-                console.log(res.data);
                 setList(mylist);
                 setOption(res.data[1])
                 setCountTransaction(res.data[2]);
-                setRefundTransaction(res.data[3]);
+                setCancelTransaction(res.data[3]);
                 setAvgItems(res.data[4]);
+                setSuccessTransaction(res.data[5]);
+                setRefundTransaction(res.data[6]);
             })
 
     }, [merchand, search]);
@@ -129,7 +133,7 @@ export default function AdminTransactions () {
                 Transactions annulées
             </span>
                     <span className={"box-data"}>
-                        {refundTransaction}
+                        {cancellTransaction}
             </span>
                 </div>
             </div>
@@ -140,6 +144,28 @@ export default function AdminTransactions () {
             </span>
                     <span className={"box-data"}>
                         {avgItems.length > 0  ? avgItems[0].average.toFixed(2) : 0}
+                    </span>
+                </div>
+
+            </div>
+            <div className={"col-4"}>
+                <div className={"box-value box-light-orange"}>
+            <span className={"box-title"}>
+                Nombre de paiement réussi
+            </span>
+                    <span className={"box-data"}>
+                        {successTransaction}
+                    </span>
+                </div>
+
+            </div>
+            <div className={"col-4"}>
+                <div className={"box-value box-light-violet"}>
+            <span className={"box-title"}>
+                Nombre de remboursement
+            </span>
+                    <span className={"box-data"}>
+                        {refundTransaction}
                     </span>
                 </div>
 

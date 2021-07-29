@@ -44,8 +44,12 @@ const addOperations = (operation) => {
 
 const addOperationsStatus = (operation) => {
     OperationStatus.findByPk(operation.id, {
+        include: [{ model: Operation, as: "operation", include: [{model: Transaction, as: 'transaction', include: [{model: Merchand, as: 'merchand'}]}] }]
     }).then((data) => {
-        new StatusOperation({ _id: data.id, ...data.toJSON() }).save()
+        let client  = data.operation.transaction.email
+        let id      = data.operation.transaction.merchand.id;
+
+        new StatusOperation({ _id: data.id, email: client, merchandId: id, ...data.toJSON() }).save()
     });
 };
 

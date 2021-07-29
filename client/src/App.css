@@ -87,6 +87,23 @@
   color : #2bbbad
 }
 
+.box-value.box-light-orange {
+  border-left: 5px solid #FFA500
+}
+
+.box-value.box-light-orange .box-title {
+  color : #FFA500
+}
+
+.box-value.box-light-violet {
+  border-left: 5px solid #EE82EE
+}
+
+.box-value.box-light-violet .box-title {
+  color : #EE82EE
+}
+
+
 .box-title {
   font-weight: bold;
   text-transform: uppercase;
